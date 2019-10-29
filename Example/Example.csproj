@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_0;USE_NUMERICS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType></DebugType>
+    <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP3_0;USE_NUMERICS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenGL\OpenGL.csproj">
+    </ProjectReference>
+    <ProjectReference Include="..\OpenGL.Platform\OpenGL.Platform.csproj">
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\crate.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Assets\crate.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\crate.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.72.0" />
+  </ItemGroup>
+</Project>
