@@ -11,6 +11,7 @@ namespace OpenGL
     public class VBO<T> : IDisposable where T : struct
     {
         #region Private Fields
+
         /// <summary>
         /// A collection of types and their respective number of components per generic vertex attribute.
         /// </summary>
@@ -65,6 +66,7 @@ namespace OpenGL
             typeof(int),
             typeof(uint),
         };
+
         #endregion
 
         #region Properties
@@ -218,9 +220,11 @@ namespace OpenGL
         {
             Dispose(false);
         }
+
         #endregion
 
         #region BufferSubData
+
         /// <summary>
         /// Updates a subset of the buffer object's data store.
         /// </summary>
@@ -264,13 +268,9 @@ namespace OpenGL
                 handle.Free();
             }
         }
+
         #endregion
 
-        #region IDisposable
-
-        /// <summary>
-        /// Deletes this buffer from GPU memory.
-        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -285,7 +285,5 @@ namespace OpenGL
                 ID = 0;
             }
         }
-
-        #endregion
     }
 }

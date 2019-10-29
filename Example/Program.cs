@@ -35,7 +35,7 @@ namespace Example
 					demo.Render();
 				else
 					Render();
-				Window.SwapBuffers();
+				SDL_GL_SwapWindow(Window.window);
 			}
 
 			SDL_Quit();

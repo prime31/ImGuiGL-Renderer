@@ -17,8 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\OpenGL\OpenGL.csproj">
     </ProjectReference>
-    <ProjectReference Include="..\OpenGL.Platform\OpenGL.Platform.csproj">
-    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -36,5 +34,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.72.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SDL2-CS\" />
   </ItemGroup>
 </Project>

@@ -66,7 +66,7 @@ namespace Example
 			// Let ImGui know where to find the texture
 			// fonts.SetTexID(_fontTextureId);
 			// fonts.SetTexID(_fontTextureId.Value);
-			fonts.ClearTexData(); // Clears CPU side texture data
+			fonts.ClearTexData();
 		}
 
 		public void Render()
@@ -242,7 +242,7 @@ namespace Example
 
 			// Bind vertex/index buffers and setup attributes for ImDrawVert
 			Gl.BindBuffer(BufferTarget.ArrayBuffer, g_VboHandle);
-			Gl.BindBuffer(BufferTarget.ArrayBuffer, g_ElementsHandle);
+			Gl.BindBuffer(BufferTarget.ElementArrayBuffer, g_ElementsHandle);
 
 			Gl.EnableVertexAttribArray(program["Position"].Location);
 			Gl.EnableVertexAttribArray(program["UV"].Location);
@@ -356,7 +356,6 @@ layout (location = 0) out vec4 Out_Color;
 void main()
 {
     Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
-	Out_Color = vec4(1, 1, 1, 1);
 }";
 
 	}
