@@ -1,5 +1,5 @@
 ﻿using System;
-using SDL.GL.ImGui;
+using SDL.ImGuiRenderer;
 using static SDL2.SDL;
 
 namespace OpenGL.Platform

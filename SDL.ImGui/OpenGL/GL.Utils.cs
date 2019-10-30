@@ -2,13 +2,13 @@
 using System.Numerics;
 using System.Text;
 
-namespace SDL.GL.ImGui
+namespace SDL.ImGuiRenderer
 {
 	public static partial class GL
 	{
-		static uint[] uint1 = new uint[1];
-		static int[] int1 = new int[1];
-		static float[] matrix4Float = new float[16];
+		static readonly uint[] uint1 = new uint[1];
+		static readonly int[] int1 = new int[1];
+		static readonly float[] matrix4Float = new float[16];
 
 		public static uint GenBuffer()
 		{

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace SDL.GL.ImGui
+namespace SDL.ImGuiRenderer
 {
-	public class ShaderProgram : IDisposable
+	public sealed class ShaderProgram : IDisposable
 	{
 		/// <summary>
 		/// Specifies the OpenGL shader program ID.
@@ -22,7 +22,7 @@ namespace SDL.GL.ImGui
 		public Shader FragmentShader;
 
 		/// <summary>
-		/// Specifies whether this program will dispose of the child 
+		/// Specifies whether this program will dispose of the child
 		/// vertex/fragment programs when the IDisposable method is called.
 		/// </summary>
 		public bool DisposeChildren;
@@ -226,7 +226,7 @@ namespace SDL.GL.ImGui
 			GC.SuppressFinalize(this);
 		}
 
-		protected virtual void Dispose(bool disposing)
+		void Dispose(bool disposing)
 		{
 			if (ProgramID != 0)
 			{

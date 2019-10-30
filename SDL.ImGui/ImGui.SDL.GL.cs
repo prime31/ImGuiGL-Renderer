@@ -2,31 +2,30 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
-using SDL.GL.ImGui;
 
-namespace Example
+namespace SDL.ImGuiRenderer
 {
 	public partial class ImGuiDemo
 	{
 		int width = 800, height = 600;
 		IntPtr _window;
-		ShaderProgram program;
-		uint g_VboHandle, g_ElementsHandle;
+		ShaderProgram _shader;
+		uint _vboHandle, _elementsHandle;
 
 		public ImGuiDemo(IntPtr window)
 		{
 			_window = window;
 
 			// compile the shader program
-			program = new ShaderProgram(VertexShader, FragmentShader);
+			_shader = new ShaderProgram(VertexShader, FragmentShader);
 
 			ImGui.SetCurrentContext(ImGui.CreateContext());
 			ImGui.GetIO().DisplaySize = new Vector2(width, height);
 			RebuildFontAtlas();
 			ImGui_ImplSDL2_Init();
 
-			g_VboHandle = GL.GenBuffer();
-			g_ElementsHandle = GL.GenBuffer();
+			_vboHandle = GL.GenBuffer();
+			_elementsHandle = GL.GenBuffer();
 		}
 
 		unsafe void RebuildFontAtlas()
@@ -68,33 +67,33 @@ namespace Example
 			GL.glDisable(GL.EnableCap.DepthTest);
 			GL.glEnable(GL.EnableCap.ScissorTest);
 
-			GL.glUseProgram(program.ProgramID);
+			GL.glUseProgram(_shader.ProgramID);
 
 			var L = draw_data.DisplayPos.X;
 			var R = draw_data.DisplayPos.X + draw_data.DisplaySize.X;
 			var T = draw_data.DisplayPos.Y;
 			var B = draw_data.DisplayPos.Y + draw_data.DisplaySize.Y;
 
-			program["Texture"].SetValue(0);
-			program["ProjMtx"].SetValue(Matrix4x4.CreateOrthographicOffCenter(L, R, B, T, -1, 1));
+			_shader["Texture"].SetValue(0);
+			_shader["ProjMtx"].SetValue(Matrix4x4.CreateOrthographicOffCenter(L, R, B, T, -1, 1));
 			GL.glBindSampler(0, 0);
 
 			GL.glBindVertexArray(vertex_array_object);
 
 			// Bind vertex/index buffers and setup attributes for ImDrawVert
-			GL.glBindBuffer(GL.BufferTarget.ArrayBuffer, g_VboHandle);
-			GL.glBindBuffer(GL.BufferTarget.ElementArrayBuffer, g_ElementsHandle);
+			GL.glBindBuffer(GL.BufferTarget.ArrayBuffer, _vboHandle);
+			GL.glBindBuffer(GL.BufferTarget.ElementArrayBuffer, _elementsHandle);
 
-			GL.EnableVertexAttribArray(program["Position"].Location);
-			GL.EnableVertexAttribArray(program["UV"].Location);
-			GL.EnableVertexAttribArray(program["Color"].Location);
+			GL.EnableVertexAttribArray(_shader["Position"].Location);
+			GL.EnableVertexAttribArray(_shader["UV"].Location);
+			GL.EnableVertexAttribArray(_shader["Color"].Location);
 
 			var drawVertSize = Marshal.SizeOf<ImDrawVert>();
-			GL.VertexAttribPointer(program["Position"].Location, 2, GL.VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("pos"));
+			GL.VertexAttribPointer(_shader["Position"].Location, 2, GL.VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("pos"));
 			//glVertexAttribPointer(g_AttribLocationVtxPos, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, pos));
-			GL.VertexAttribPointer(program["UV"].Location, 2, GL.VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("uv"));
+			GL.VertexAttribPointer(_shader["UV"].Location, 2, GL.VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("uv"));
 			//glVertexAttribPointer(g_AttribLocationVtxUV, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, uv));
-			GL.VertexAttribPointer(program["Color"].Location, 2, GL.VertexAttribPointerType.Byte, true, drawVertSize, Marshal.OffsetOf<ImDrawVert>("col"));
+			GL.VertexAttribPointer(_shader["Color"].Location, 2, GL.VertexAttribPointerType.Byte, true, drawVertSize, Marshal.OffsetOf<ImDrawVert>("col"));
 			//glVertexAttribPointer(g_AttribLocationVtxColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, col));
 		}
 

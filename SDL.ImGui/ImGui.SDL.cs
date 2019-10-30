@@ -2,12 +2,12 @@
 using ImGuiNET;
 using static SDL2.SDL;
 
-namespace Example
+namespace SDL.ImGuiRenderer
 {
 	public partial class ImGuiDemo
 	{
-		float g_Time;
-		bool[] g_MousePressed = { false, false, false };
+		float _time;
+		readonly bool[] _mousePressed = { false, false, false };
 
 		void ImGui_ImplSDL2_Init()
 		{
@@ -43,18 +43,18 @@ namespace Example
 
 			// Setup display size (every frame to accommodate for window resizing)
 			SDL_GetWindowSize(_window, out var w, out var h);
-			SDL_GL_GetDrawableSize(_window, out var display_w, out var display_h);
-			io.DisplaySize = new Vector2((float)w, (float)h);
+			SDL_GL_GetDrawableSize(_window, out var displayW, out var displayH);
+			io.DisplaySize = new Vector2(w, h);
 			if (w > 0 && h > 0)
-				io.DisplayFramebufferScale = new Vector2((float)display_w / w, (float)display_h / h);
+				io.DisplayFramebufferScale = new Vector2((float)displayW / w, (float)displayH / h);
 
 			// Setup time step (we don't use SDL_GetTicks() because it is using millisecond resolution)
 			var frequency = SDL_GetPerformanceFrequency();
-			var current_time = SDL_GetPerformanceCounter();
-			io.DeltaTime = g_Time > 0 ? (float)((double)(current_time - g_Time) / frequency) : 1.0f / 60.0f;
+			var currentTime = SDL_GetPerformanceCounter();
+			io.DeltaTime = _time > 0 ? (float)((double)(currentTime - _time) / frequency) : 1.0f / 60.0f;
 			if (io.DeltaTime <= 0)
 				io.DeltaTime = 0.016f;
-			g_Time = current_time;
+			_time = currentTime;
 
 			ImGui_ImplSDL2_UpdateMousePosAndButtons();
 			ImGui_ImplSDL2_UpdateGamepads();
@@ -75,9 +75,9 @@ namespace Example
 					}
 				case SDL_EventType.SDL_MOUSEBUTTONDOWN:
 					{
-						if (evt.button.button == SDL_BUTTON_LEFT) g_MousePressed[0] = true;
-						if (evt.button.button == SDL_BUTTON_RIGHT) g_MousePressed[1] = true;
-						if (evt.button.button == SDL_BUTTON_MIDDLE) g_MousePressed[2] = true;
+						if (evt.button.button == SDL_BUTTON_LEFT) _mousePressed[0] = true;
+						if (evt.button.button == SDL_BUTTON_RIGHT) _mousePressed[1] = true;
+						if (evt.button.button == SDL_BUTTON_MIDDLE) _mousePressed[2] = true;
 						return;
 					}
 				case SDL_EventType.SDL_TEXTINPUT:
@@ -111,10 +111,10 @@ namespace Example
 				io.MousePos = new Vector2(float.MinValue, float.MinValue);
 
 			var mouseButtons = SDL_GetMouseState(out var mx, out var my);
-			io.MouseDown[0] = g_MousePressed[0] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;  // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
-			io.MouseDown[1] = g_MousePressed[1] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
-			io.MouseDown[2] = g_MousePressed[2] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_MIDDLE)) != 0;
-			g_MousePressed[0] = g_MousePressed[1] = g_MousePressed[2] = false;
+			io.MouseDown[0] = _mousePressed[0] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;  // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
+			io.MouseDown[1] = _mousePressed[1] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
+			io.MouseDown[2] = _mousePressed[2] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_MIDDLE)) != 0;
+			_mousePressed[0] = _mousePressed[1] = _mousePressed[2] = false;
 
 			var focusedWindow = SDL_GetKeyboardFocus();
 			if (_window == focusedWindow)

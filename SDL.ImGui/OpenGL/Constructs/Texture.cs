@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace SDL.GL.ImGui
+namespace SDL.ImGuiRenderer
 {
-	public class Texture : IDisposable
+	public sealed class Texture : IDisposable
 	{
 		public uint TextureID;
 		public int Width, Height;
-		public GL.TextureTarget TextureTarget;
+		GL.TextureTarget TextureTarget;
 
 
 		public Texture(IntPtr pixelData, int width, int height)
@@ -22,10 +22,9 @@ namespace SDL.GL.ImGui
 			TextureTarget = GL.TextureTarget.Texture2D;
 			TextureID = GL.GenTexture();
 
-			GL.glPixelStorei(GL.PixelStoreParameter.UnpackAlignment, 1); // set pixel alignment
-			GL.glBindTexture(TextureTarget, TextureID);     // bind the texture to memory in OpenGL
+			GL.glPixelStorei(GL.PixelStoreParameter.UnpackAlignment, 1);
+			GL.glBindTexture(TextureTarget, TextureID);
 
-			//Gl.TexParameteri(TextureTarget, TextureParameterName.GenerateMipmap, 0);
 			GL.glTexImage2D(TextureTarget, 0, internalFormat, width, height, 0, format, GL.PixelType.UnsignedByte, pixelData);
 			GL.glTexParameteri(TextureTarget, GL.TextureParameterName.TextureMagFilter, GL.TextureParameter.Linear);
 			GL.glTexParameteri(TextureTarget, GL.TextureParameterName.TextureMinFilter, GL.TextureParameter.Linear);
@@ -45,7 +44,7 @@ namespace SDL.GL.ImGui
 			GC.SuppressFinalize(this);
 		}
 
-		protected virtual void Dispose(bool disposing)
+		void Dispose(bool disposing)
 		{
 			if (TextureID != 0)
 			{

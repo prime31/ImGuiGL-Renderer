@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Numerics;
 
-namespace SDL.GL.ImGui
+namespace SDL.ImGuiRenderer
 {
 	public enum ParamType
 	{
@@ -10,7 +10,7 @@ namespace SDL.GL.ImGui
 		Attribute
 	}
 
-	public class ShaderProgramParam
+	public sealed class ShaderProgramParam
 	{
 		/// <summary>
 		/// Specifies the C# equivalent of the GLSL data type.

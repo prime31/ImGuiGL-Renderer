@@ -23,7 +23,6 @@
     <PackageReference Include="ImGui.NET" Version="1.72.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SDL2-CS\" />
-    <Folder Include="OpenGL\NumericsExtensions\" />
+    <ProjectReference Include="..\SDL.ImGui\SDL.ImGui.csproj" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SDL.GL.ImGui
+namespace SDL.ImGuiRenderer
 {
-	public class Shader : IDisposable
+	public sealed class Shader : IDisposable
 	{
 		/// <summary>
 		/// Specifies the OpenGL ShaderID.
@@ -42,7 +42,7 @@ namespace SDL.GL.ImGui
 			GC.SuppressFinalize(this);
 		}
 
-		protected virtual void Dispose(bool disposing)
+		void Dispose(bool disposing)
 		{
 			if (ShaderID != 0)
 			{

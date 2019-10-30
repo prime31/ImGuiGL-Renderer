@@ -1,5 +1,5 @@
 ﻿using OpenGL.Platform;
-using SDL.GL.ImGui;
+using SDL.ImGuiRenderer;
 using static SDL2.SDL;
 
 namespace Example
@@ -15,11 +15,8 @@ namespace Example
 			Window.OnEvent += HandleEvent;
 			demo = new ImGuiDemo(Window.window);
 
-
-
-			var flags = SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
-			SDL_CreateWindow("fucker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 800, flags);
-
+			// var flags = SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+			// SDL_CreateWindow("fucker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 800, flags);
 
 			while (!quit)
 			{
