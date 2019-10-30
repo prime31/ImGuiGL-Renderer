@@ -4,3 +4,4 @@ Example/obj
 .idea/.idea.OpenGL
 SDL.ImGui/obj
 SDL.ImGui/bin
+.idea/.idea.SDL.ImGui.Renderer
