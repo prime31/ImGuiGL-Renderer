@@ -37,5 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SDL2-CS\" />
+    <Folder Include="OpenGL\FIXME\" />
+    <Folder Include="OpenGL\Math\" />
   </ItemGroup>
 </Project>

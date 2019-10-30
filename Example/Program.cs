@@ -1,6 +1,6 @@
 ﻿using System;
-using OpenGL;
 using OpenGL.Platform;
+using OpenGLLLLLLLL.Slim;
 using static SDL2.SDL;
 
 namespace Example
@@ -43,9 +43,9 @@ namespace Example
 
 		static void Render()
 		{
-			Gl.Viewport(0, 0, 800, 600);
-			Gl.ClearColor(0.4f, 0.4f, 0.4f, 1);
-			Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			GL.glViewport(0, 0, 800, 600);
+			GL.glClearColor(0.4f, 0.4f, 0.4f, 1);
+			GL.glClear(GL.ClearBufferMask.ColorBufferBit | GL.ClearBufferMask.DepthBufferBit);
 		}
 
 		static void HandleEvent(SDL_Event e)

@@ -15,15 +15,12 @@ namespace OpenGL
 
     public class ProgramParam
     {
-        #region Variables
         private Type type;
         private int location;
         private uint programid;
         private ParamType ptype;
         private string name;
-        #endregion
 
-        #region Properties
         /// <summary>
         /// Specifies the C# equivalent of the GLSL data type.
         /// </summary>
@@ -48,9 +45,7 @@ namespace OpenGL
         /// Specifies the case-sensitive name of the parameter.
         /// </summary>
         public string Name { get { return name; } }
-        #endregion
 
-        #region Constructor
         /// <summary>
         /// Creates a program parameter with a given type and name.
         /// The location must be found after the program is compiled
@@ -80,9 +75,7 @@ namespace OpenGL
             programid = Program;
             location = Location;
         }
-        #endregion
 
-        #region GetLocation
         /// <summary>
         /// Gets the location of the parameter in a compiled OpenGL program.
         /// </summary>
@@ -96,9 +89,7 @@ namespace OpenGL
                 location = (ptype == OpenGL.ParamType.Uniform ? Program.GetUniformLocation(name) : Program.GetAttributeLocation(name));
             }
         }
-        #endregion
 
-        #region SetValue Overrides
         public void SetValue(bool param)
         {
             if (Type != typeof(bool)) throw new Exception(string.Format("SetValue({0}) was given a bool.", Type));
@@ -186,13 +177,6 @@ namespace OpenGL
                 throw new ArgumentException("param was an unexpected length.", "param");
             }
         }
-
-        /*public void SetValue(Texture param)
-        {
-            if (Type != typeof(Texture)) throw new Exception(string.Format("SetValue({0}) was given a Texture.", Type));
-            Gl.Uniform1i(location, param.Binding);
-        }*/
-        #endregion
     }
 
     public class Shader : IDisposable
@@ -265,7 +249,6 @@ namespace OpenGL
 
     public class ShaderProgram : IDisposable
     {
-        #region Properties
         /// <summary>
         /// Specifies the OpenGL shader program ID.
         /// </summary>
@@ -306,9 +289,7 @@ namespace OpenGL
         {
             get { return Gl.GetProgramInfoLog(ProgramID); }
         }
-        #endregion
 
-        #region Constructors and Destructor
         /// <summary>
         /// Links a vertex and fragment shader together to create a shader program.
         /// </summary>
@@ -350,9 +331,7 @@ namespace OpenGL
         {
             Dispose(false);
         }
-        #endregion
 
-        #region GetParams
         /// <summary>
         /// Parses all of the parameters (attributes/uniforms) from the two attached shaders
         /// and then loads their location by passing this shader program into the parameter object.
@@ -524,9 +503,7 @@ namespace OpenGL
                 default: return typeof(object);
             }
         }
-        #endregion
 
-        #region Methods
         public void Use()
         {
             if (Gl.CurrentProgram != ProgramID) Gl.UseProgram(this.ProgramID);
@@ -543,9 +520,7 @@ namespace OpenGL
             Use();
             return Gl.GetAttribLocation(ProgramID, Name);
         }
-        #endregion
 
-        #region IDisposable
         public void Dispose()
         {
             Dispose(true);
@@ -572,6 +547,5 @@ namespace OpenGL
                 ProgramID = 0;
             }
         }
-        #endregion
     }
 }

@@ -2,16 +2,16 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
-using OpenGL;
 using OpenGL.Platform;
+using OpenGLLLLLLLL.Slim;
 using static SDL2.SDL;
 
 namespace Example
 {
 	public class ImGuiDemo : IDemo, IDisposable
 	{
-		private int width = 800, height = 600;
-		private ShaderProgram program;
+		int width = 800, height = 600;
+		ShaderProgram program;
 		float g_Time;
 		uint g_VboHandle, g_ElementsHandle;
 		bool[] g_MousePressed = { false, false, false };
@@ -26,8 +26,8 @@ namespace Example
 			RebuildFontAtlas();
 			ImGui_ImplSDL2_Init();
 
-			g_VboHandle = Gl.GenBuffer();
-			g_ElementsHandle = Gl.GenBuffer();
+			g_VboHandle = GL.GenBuffer();
+			g_ElementsHandle = GL.GenBuffer();
 
 			Window.OnEvent += ImGui_ImplSDL2_ProcessEvent;
 		}
@@ -49,7 +49,7 @@ namespace Example
 			// var pixels = new byte[width * height * bytesPerPixel];
 			// Marshal.Copy(new IntPtr(pixelData), pixels, 0, pixels.Length);
 
-			var tex = new Texture((IntPtr)pixelData, width, height, PixelFormat.Rgba, PixelInternalFormat.Rgba);
+			var tex = new Texture((IntPtr)pixelData, width, height, GL.PixelFormat.Rgba, GL.PixelInternalFormat.Rgba);
 
 			// Store our identifier
 			fonts.TexID = (IntPtr)tex.TextureID;
@@ -77,13 +77,13 @@ namespace Example
 			ImGui.Render();
 
 			var io = ImGui.GetIO();
-			Gl.Viewport(0, 0, (int)io.DisplaySize.X, (int)io.DisplaySize.Y);
-			Gl.ClearColor(0.7f, 0.6f, 0.9f, 1);
-			Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			GL.glViewport(0, 0, (int)io.DisplaySize.X, (int)io.DisplaySize.Y);
+			GL.glClearColor(0.8f, 0.8f, 0.8f, 1);
+			GL.glClear(GL.ClearBufferMask.ColorBufferBit | GL.ClearBufferMask.DepthBufferBit);
 
 			ImGui_ImplOpenGL3_RenderDrawData();
 
-			Gl.Disable(EnableCap.ScissorTest);
+			GL.glDisable(GL.EnableCap.ScissorTest);
 		}
 
 		void ImGui_ImplSDL2_Init()
@@ -215,18 +215,14 @@ namespace Example
 
 		void ImGui_ImplOpenGL3_SetupRenderState(ImDrawDataPtr draw_data, int fb_width, int fb_height, uint vertex_array_object)
 		{
-			Gl.Enable(EnableCap.Blend);
-			Gl.BlendEquation(BlendEquationMode.FuncAdd);
-			Gl.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-			Gl.Disable(EnableCap.CullFace);
-			Gl.Disable(EnableCap.DepthTest);
-			Gl.Enable(EnableCap.ScissorTest);
+			GL.glEnable(GL.EnableCap.Blend);
+			GL.glBlendEquation(GL.BlendEquationMode.FuncAdd);
+			GL.glBlendFunc(GL.BlendingFactorSrc.SrcAlpha, GL.BlendingFactorDest.OneMinusSrcAlpha);
+			GL.glDisable(GL.EnableCap.CullFace);
+			GL.glDisable(GL.EnableCap.DepthTest);
+			GL.glEnable(GL.EnableCap.ScissorTest);
 
-			//Gl.Viewport(0, 0, fb_width, fb_height);
-			//Gl.ClearColor(0.7f, 0.6f, 0.9f, 1);
-			//Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-			Gl.UseProgram(program);
+			GL.glUseProgram(program.ProgramID);
 
 			var L = draw_data.DisplayPos.X;
 			var R = draw_data.DisplayPos.X + draw_data.DisplaySize.X;
@@ -234,26 +230,25 @@ namespace Example
 			var B = draw_data.DisplayPos.Y + draw_data.DisplaySize.Y;
 
 			program["Texture"].SetValue(0);
-			program["ProjMtx"].SetValue(Matrix4.CreateOrthographicOffCenter(L, R, B, T, -1, 1));
-			Gl.BindSampler(0, 0);
+			program["ProjMtx"].SetValue(OpenGLLLLLLLL.Slim.Matrix4.CreateOrthographicOffCenter(L, R, B, T, -1, 1));
+			GL.glBindSampler(0, 0);
 
-			Gl.BindVertexArray(vertex_array_object);
-			//glBindVertexArray(vertex_array_object);
+			GL.glBindVertexArray(vertex_array_object);
 
 			// Bind vertex/index buffers and setup attributes for ImDrawVert
-			Gl.BindBuffer(BufferTarget.ArrayBuffer, g_VboHandle);
-			Gl.BindBuffer(BufferTarget.ElementArrayBuffer, g_ElementsHandle);
+			GL.glBindBuffer(GL.BufferTarget.ArrayBuffer, g_VboHandle);
+			GL.glBindBuffer(GL.BufferTarget.ElementArrayBuffer, g_ElementsHandle);
 
-			Gl.EnableVertexAttribArray(program["Position"].Location);
-			Gl.EnableVertexAttribArray(program["UV"].Location);
-			Gl.EnableVertexAttribArray(program["Color"].Location);
+			GL.EnableVertexAttribArray(program["Position"].Location);
+			GL.EnableVertexAttribArray(program["UV"].Location);
+			GL.EnableVertexAttribArray(program["Color"].Location);
 
 			var drawVertSize = Marshal.SizeOf<ImDrawVert>();
-			Gl.VertexAttribPointer(program["Position"].Location, 2, VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("pos"));
+			GL.VertexAttribPointer(program["Position"].Location, 2, GL.VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("pos"));
 			//glVertexAttribPointer(g_AttribLocationVtxPos, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, pos));
-			Gl.VertexAttribPointer(program["UV"].Location, 2, VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("uv"));
+			GL.VertexAttribPointer(program["UV"].Location, 2, GL.VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("uv"));
 			//glVertexAttribPointer(g_AttribLocationVtxUV, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, uv));
-			Gl.VertexAttribPointer(program["Color"].Location, 2, VertexAttribPointerType.Byte, true, drawVertSize, Marshal.OffsetOf<ImDrawVert>("col"));
+			GL.VertexAttribPointer(program["Color"].Location, 2, GL.VertexAttribPointerType.Byte, true, drawVertSize, Marshal.OffsetOf<ImDrawVert>("col"));
 			//glVertexAttribPointer(g_AttribLocationVtxColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, col));
 		}
 
@@ -262,12 +257,12 @@ namespace Example
 			var draw_data = ImGui.GetDrawData();
 
 			// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
-			int fb_width = (int)(draw_data.DisplaySize.X * draw_data.FramebufferScale.X);
-			int fb_height = (int)(draw_data.DisplaySize.Y * draw_data.FramebufferScale.Y);
+			var fb_width = (int)(draw_data.DisplaySize.X * draw_data.FramebufferScale.X);
+			var fb_height = (int)(draw_data.DisplaySize.Y * draw_data.FramebufferScale.Y);
 			if (fb_width <= 0 || fb_height <= 0)
 				return;
 
-			var vertex_array_object = Gl.GenVertexArray();
+			var vertex_array_object = GL.GenVertexArray();
 			//glGenVertexArrays(1, &vertex_array_object);
 			ImGui_ImplOpenGL3_SetupRenderState(draw_data, fb_width, fb_height, vertex_array_object);
 
@@ -277,7 +272,7 @@ namespace Example
 			draw_data.ScaleClipRects(clip_scale);
 
 			var lastTexId = ImGui.GetIO().Fonts.TexID;
-			Gl.BindTexture(TextureTarget.Texture2D, (uint)lastTexId);
+			GL.glBindTexture(GL.TextureTarget.Texture2D, (uint)lastTexId);
 
 			for (var n = 0; n < draw_data.CmdListsCount; n++)
 			{
@@ -287,9 +282,9 @@ namespace Example
 				var drawVertSize = Marshal.SizeOf<ImDrawVert>();
 				var drawIdxSize = 2;
 
-				Gl.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cmd_list.VtxBuffer.Size * drawVertSize), cmd_list.VtxBuffer.Data, BufferUsageHint.StreamDraw);
+				GL.glBufferData(GL.BufferTarget.ArrayBuffer, (IntPtr)(cmd_list.VtxBuffer.Size * drawVertSize), cmd_list.VtxBuffer.Data, GL.BufferUsageHint.StreamDraw);
 				//glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), (const GLvoid*)cmd_list->VtxBuffer.Data, GL_STREAM_DRAW);
-				Gl.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(cmd_list.IdxBuffer.Size * drawIdxSize), cmd_list.IdxBuffer.Data, BufferUsageHint.StreamDraw);
+				GL.glBufferData(GL.BufferTarget.ElementArrayBuffer, (IntPtr)(cmd_list.IdxBuffer.Size * drawIdxSize), cmd_list.IdxBuffer.Data, GL.BufferUsageHint.StreamDraw);
 				//glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), (const GLvoid*)cmd_list->IdxBuffer.Data, GL_STREAM_DRAW);
 
 				for (var cmd_i = 0; cmd_i < cmd_list.CmdBuffer.Size; cmd_i++)
@@ -303,7 +298,7 @@ namespace Example
 					{
 						// Project scissor/clipping rectangles into framebuffer space
 						var clip_rect = pcmd.ClipRect;
-						Gl.Scissor((int)clip_rect.X, (int)clip_rect.Y, (int)(clip_rect.Z - clip_rect.X), (int)(clip_rect.W - clip_rect.Y));
+						GL.glScissor((int)clip_rect.X, (int)clip_rect.Y, (int)(clip_rect.Z - clip_rect.X), (int)(clip_rect.W - clip_rect.Y));
 						//Gl.Scissor((int)clip_rect.X, (int)(fb_height - clip_rect.X), (int)(clip_rect.Z - clip_rect.X), (int)(clip_rect.W - clip_rect.Y));
 						//glScissor((int)clip_rect.x, (int)(fb_height - clip_rect.w), (int)(clip_rect.z - clip_rect.x), (int)(clip_rect.w - clip_rect.y));
 
@@ -313,17 +308,17 @@ namespace Example
 							if (pcmd.TextureId != lastTexId)
 							{
 								lastTexId = pcmd.TextureId;
-								Gl.BindTexture(TextureTarget.Texture2D, (uint)pcmd.TextureId);
+								GL.glBindTexture(GL.TextureTarget.Texture2D, (uint)pcmd.TextureId);
 							}
 						}
 
-						Gl.DrawElementsBaseVertex(BeginMode.Triangles, (int)pcmd.ElemCount, drawIdxSize == 2 ? DrawElementsType.UnsignedShort : DrawElementsType.UnsignedInt, (IntPtr)(pcmd.IdxOffset * drawIdxSize), (int)pcmd.VtxOffset);
+						GL.glDrawElementsBaseVertex(GL.BeginMode.Triangles, (int)pcmd.ElemCount, drawIdxSize == 2 ? GL.DrawElementsType.UnsignedShort : GL.DrawElementsType.UnsignedInt, (IntPtr)(pcmd.IdxOffset * drawIdxSize), (int)pcmd.VtxOffset);
 						//glDrawElementsBaseVertex(GL_TRIANGLES, (GLsizei)pcmd->ElemCount, sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(intptr_t)(pcmd->IdxOffset * sizeof(ImDrawIdx)), (GLint)pcmd->VtxOffset);
 					}
 				}
 			}
 
-			Gl.DeleteVertexArray(vertex_array_object);
+			GL.DeleteVertexArray(vertex_array_object);
 			//glDeleteVertexArrays(1, &vertex_array_object);
 		}
 

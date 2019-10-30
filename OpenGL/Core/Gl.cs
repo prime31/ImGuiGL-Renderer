@@ -4849,7 +4849,7 @@ namespace OpenGL
         /// <param name="buffers">
         /// Specifies an array in which the generated buffer object names are stored.
         /// </param>
-        public static void GenBuffers(Int32 n, [OutAttribute] UInt32[] buffers)
+        public static void GenBuffers(Int32 n, [Out] UInt32[] buffers)
         {
             Delegates.glGenBuffers(n, buffers);
         }
