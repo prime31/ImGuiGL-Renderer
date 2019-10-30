@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Numerics;
 
-namespace OpenGLLLLLLLL.Slim
+namespace SDL.GL.ImGui
 {
 	public enum ParamType
 	{
@@ -67,57 +68,43 @@ namespace OpenGLLLLLLLL.Slim
 
 		public void SetValue(bool param)
 		{
-			if (Type != typeof(bool))
-				throw new Exception(string.Format("SetValue({0}) was given a bool.", Type));
+			EnsureType<bool>();
 			GL.glUniform1i(Location, (param) ? 1 : 0);
 		}
 
 		public void SetValue(int param)
 		{
+			EnsureType<int>();
 			GL.glUniform1i(Location, param);
 		}
 
 		public void SetValue(float param)
 		{
-			if (Type != typeof(float))
-				throw new Exception(string.Format("SetValue({0}) was given a float.", Type));
+			EnsureType<float>();
 			GL.glUniform1f(Location, param);
 		}
 
 		public void SetValue(Vector2 param)
 		{
-			if (Type != typeof(Vector2))
-				throw new Exception(string.Format("SetValue({0}) was given a Vector2.", Type));
+			EnsureType<Vector2>();
 			GL.glUniform2f(Location, param.X, param.Y);
 		}
 
 		public void SetValue(Vector3 param)
 		{
-			if (Type != typeof(Vector3))
-				throw new Exception(string.Format("SetValue({0}) was given a Vector3.", Type));
+			EnsureType<Vector3>();
 			GL.glUniform3f(Location, param.X, param.Y, param.Z);
 		}
 
 		public void SetValue(Vector4 param)
 		{
-			if (Type != typeof(Vector4))
-				throw new Exception(string.Format("SetValue({0}) was given a Vector4.", Type));
+			EnsureType<Vector4>();
 			GL.glUniform4f(Location, param.X, param.Y, param.Z, param.W);
 		}
 
-		public void SetValue(Matrix3 param)
+		public void SetValue(Matrix4x4 param)
 		{
-			if (Type != typeof(Matrix3))
-				throw new Exception(string.Format("SetValue({0}) was given a Matrix3.", Type));
-
-			GL.UniformMatrix3fv(Location, param);
-		}
-
-		public void SetValue(Matrix4 param)
-		{
-			if (Type != typeof(Matrix4))
-				throw new Exception(string.Format("SetValue({0}) was given a Matrix4.", Type));
-
+			EnsureType<Matrix4x4>();
 			GL.UniformMatrix4fv(Location, param);
 		}
 
@@ -125,38 +112,32 @@ namespace OpenGLLLLLLLL.Slim
 		{
 			if (param.Length == 16)
 			{
-				if (Type != typeof(Matrix4))
-					throw new Exception(string.Format("SetValue({0}) was given a Matrix4.", Type));
+				EnsureType<Matrix4x4>();
 				GL.glUniformMatrix4fv(Location, 1, false, param);
 			}
 			else if (param.Length == 9)
 			{
-				if (Type != typeof(Matrix3))
-					throw new Exception(string.Format("SetValue({0}) was given a Matrix3.", Type));
+				EnsureType<Exception>();
 				GL.glUniformMatrix3fv(Location, 1, false, param);
 			}
 			else if (param.Length == 4)
 			{
-				if (Type != typeof(Vector4))
-					throw new Exception(string.Format("SetValue({0}) was given a Vector4.", Type));
+				EnsureType<Vector4>();
 				GL.glUniform4f(Location, param[0], param[1], param[2], param[3]);
 			}
 			else if (param.Length == 3)
 			{
-				if (Type != typeof(Vector3))
-					throw new Exception(string.Format("SetValue({0}) was given a Vector3.", Type));
+				EnsureType<Vector3>();
 				GL.glUniform3f(Location, param[0], param[1], param[2]);
 			}
 			else if (param.Length == 2)
 			{
-				if (Type != typeof(Vector2))
-					throw new Exception(string.Format("SetValue({0}) was given a Vector2.", Type));
+				EnsureType<Vector2>();
 				GL.glUniform2f(Location, param[0], param[1]);
 			}
 			else if (param.Length == 1)
 			{
-				if (Type != typeof(float))
-					throw new Exception(string.Format("SetValue({0}) was given a float.", Type));
+				EnsureType<float>();
 				GL.glUniform1f(Location, param[0]);
 			}
 			else
@@ -164,5 +145,8 @@ namespace OpenGLLLLLLLL.Slim
 				throw new ArgumentException("param was an unexpected length.", nameof(param));
 			}
 		}
+
+		[Conditional("DEBUG")]
+		void EnsureType<T>() => Debug.Assert(Type == typeof(T), $"SetValue({Type}) was called with a {typeof(T).Name}");
 	}
 }

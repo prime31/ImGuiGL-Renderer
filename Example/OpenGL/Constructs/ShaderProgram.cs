@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace OpenGLLLLLLLL.Slim
+namespace SDL.GL.ImGui
 {
 	public class ShaderProgram : IDisposable
 	{
@@ -129,8 +129,8 @@ namespace OpenGLLLLLLLL.Slim
 			{
 				case GL.ActiveAttribType.Float: return typeof(float);
 				case GL.ActiveAttribType.FloatMat2: return typeof(float[]);
-				case GL.ActiveAttribType.FloatMat3: return typeof(Matrix3);
-				case GL.ActiveAttribType.FloatMat4: return typeof(Matrix4);
+				case GL.ActiveAttribType.FloatMat3: throw new Exception();
+				case GL.ActiveAttribType.FloatMat4: return typeof(Matrix4x4);
 				case GL.ActiveAttribType.FloatVec2: return typeof(Vector2);
 				case GL.ActiveAttribType.FloatVec3: return typeof(Vector3);
 				case GL.ActiveAttribType.FloatVec4: return typeof(Vector4);
@@ -155,8 +155,8 @@ namespace OpenGLLLLLLLL.Slim
 				case GL.ActiveUniformType.BoolVec3: return typeof(bool[]);
 				case GL.ActiveUniformType.BoolVec4: return typeof(bool[]);
 				case GL.ActiveUniformType.FloatMat2: return typeof(float[]);
-				case GL.ActiveUniformType.FloatMat3: return typeof(Matrix3);
-				case GL.ActiveUniformType.FloatMat4: return typeof(Matrix4);
+				case GL.ActiveUniformType.FloatMat3: throw new Exception();
+				case GL.ActiveUniformType.FloatMat4: return typeof(Matrix4x4);
 				case GL.ActiveUniformType.Sampler1D:
 				case GL.ActiveUniformType.Sampler2D:
 				case GL.ActiveUniformType.Sampler3D:

@@ -1,4 +1,5 @@
 ﻿using System;
+using SDL.GL.ImGui;
 using static SDL2.SDL;
 
 namespace OpenGL.Platform
@@ -6,7 +7,6 @@ namespace OpenGL.Platform
     public static class Window
     {
 		public static event Action<SDL_Event> OnEvent;
-		public static int MainThreadID;
 		public static IntPtr window, glContext;
 		public static uint windowID;
 
@@ -23,9 +23,6 @@ namespace OpenGL.Platform
             SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_DEPTH_SIZE, 24);
             SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_ALPHA_SIZE, 8);
             SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_STENCIL_SIZE, 8);
-
-            // capture the rendering thread ID
-            MainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 
             // create the window which should be able to have a valid OpenGL context and is resizable
             var flags = SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
@@ -57,11 +54,11 @@ namespace OpenGL.Platform
 				throw new Exception("CouldNotCreateContext");
 
             // initialize the screen to black as soon as possible
-            Gl.ClearColor(0f, 0f, 0f, 1f);
-            Gl.Clear(ClearBufferMask.ColorBufferBit);
+            GL.glClearColor(0f, 0f, 0f, 1f);
+			GL.glClear(GL.ClearBufferMask.ColorBufferBit);
 			SDL_GL_SwapWindow(window);
 
-			Console.WriteLine($"GL Version: {Gl.GetString(StringName.Version)}");
+			Console.WriteLine($"GL Version: {GL.glGetString(GL.StringName.Version)}");
         }
 
         public static void HandleEvents()

@@ -2,22 +2,21 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
-using OpenGL.Platform;
-using OpenGLLLLLLLL.Slim;
-using static SDL2.SDL;
+using SDL.GL.ImGui;
 
 namespace Example
 {
-	public class ImGuiDemo : IDemo, IDisposable
+	public partial class ImGuiDemo
 	{
 		int width = 800, height = 600;
+		IntPtr _window;
 		ShaderProgram program;
-		float g_Time;
 		uint g_VboHandle, g_ElementsHandle;
-		bool[] g_MousePressed = { false, false, false };
 
-		public ImGuiDemo()
+		public ImGuiDemo(IntPtr window)
 		{
+			_window = window;
+
 			// compile the shader program
 			program = new ShaderProgram(VertexShader, FragmentShader);
 
@@ -28,44 +27,18 @@ namespace Example
 
 			g_VboHandle = GL.GenBuffer();
 			g_ElementsHandle = GL.GenBuffer();
-
-			Window.OnEvent += ImGui_ImplSDL2_ProcessEvent;
-		}
-
-		public void Dispose()
-		{
-			Window.OnEvent -= ImGui_ImplSDL2_ProcessEvent;
 		}
 
 		unsafe void RebuildFontAtlas()
 		{
-			// Get font texture from ImGui
 			var fonts = ImGui.GetIO().Fonts;
 
 			fonts.AddFontDefault();
-			fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int bytesPerPixel);
-
-			// Copy the data to a managed array
-			// var pixels = new byte[width * height * bytesPerPixel];
-			// Marshal.Copy(new IntPtr(pixelData), pixels, 0, pixels.Length);
+			fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int _);
 
 			var tex = new Texture((IntPtr)pixelData, width, height, GL.PixelFormat.Rgba, GL.PixelInternalFormat.Rgba);
 
-			// Store our identifier
 			fonts.TexID = (IntPtr)tex.TextureID;
-
-
-			// Should a texture already have been built previously, unbind it first so it can be deallocated
-			// if (_fontTextureId.HasValue)
-			// 	UnbindTexture(_fontTextureId.Value);
-
-			// Bind the new texture to an ImGui-friendly id
-			// _fontTextureId = BindTexture(tex2d);
-			// var _fontTextureId = new IntPtr(666);
-
-			// Let ImGui know where to find the texture
-			// fonts.SetTexID(_fontTextureId);
-			// fonts.SetTexID(_fontTextureId.Value);
 			fonts.ClearTexData();
 		}
 
@@ -86,133 +59,6 @@ namespace Example
 			GL.glDisable(GL.EnableCap.ScissorTest);
 		}
 
-		void ImGui_ImplSDL2_Init()
-		{
-			var io = ImGui.GetIO();
-
-			io.KeyMap[(int)ImGuiKey.Tab] = (int)SDL_Scancode.SDL_SCANCODE_TAB;
-			io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)SDL_Scancode.SDL_SCANCODE_LEFT;
-			io.KeyMap[(int)ImGuiKey.RightArrow] = (int)SDL_Scancode.SDL_SCANCODE_RIGHT;
-			io.KeyMap[(int)ImGuiKey.UpArrow] = (int)SDL_Scancode.SDL_SCANCODE_UP;
-			io.KeyMap[(int)ImGuiKey.DownArrow] = (int)SDL_Scancode.SDL_SCANCODE_DOWN;
-			io.KeyMap[(int)ImGuiKey.PageUp] = (int)SDL_Scancode.SDL_SCANCODE_PAGEUP;
-			io.KeyMap[(int)ImGuiKey.PageDown] = (int)SDL_Scancode.SDL_SCANCODE_PAGEDOWN;
-			io.KeyMap[(int)ImGuiKey.Home] = (int)SDL_Scancode.SDL_SCANCODE_HOME;
-			io.KeyMap[(int)ImGuiKey.End] = (int)SDL_Scancode.SDL_SCANCODE_END;
-			io.KeyMap[(int)ImGuiKey.Insert] = (int)SDL_Scancode.SDL_SCANCODE_INSERT;
-			io.KeyMap[(int)ImGuiKey.Delete] = (int)SDL_Scancode.SDL_SCANCODE_DELETE;
-			io.KeyMap[(int)ImGuiKey.Backspace] = (int)SDL_Scancode.SDL_SCANCODE_BACKSPACE;
-			io.KeyMap[(int)ImGuiKey.Space] = (int)SDL_Scancode.SDL_SCANCODE_SPACE;
-			io.KeyMap[(int)ImGuiKey.Enter] = (int)SDL_Scancode.SDL_SCANCODE_RETURN;
-			io.KeyMap[(int)ImGuiKey.Escape] = (int)SDL_Scancode.SDL_SCANCODE_ESCAPE;
-			io.KeyMap[(int)ImGuiKey.KeyPadEnter] = (int)SDL_Scancode.SDL_SCANCODE_RETURN2;
-			io.KeyMap[(int)ImGuiKey.A] = (int)SDL_Scancode.SDL_SCANCODE_A;
-			io.KeyMap[(int)ImGuiKey.C] = (int)SDL_Scancode.SDL_SCANCODE_C;
-			io.KeyMap[(int)ImGuiKey.V] = (int)SDL_Scancode.SDL_SCANCODE_V;
-			io.KeyMap[(int)ImGuiKey.X] = (int)SDL_Scancode.SDL_SCANCODE_X;
-			io.KeyMap[(int)ImGuiKey.Y] = (int)SDL_Scancode.SDL_SCANCODE_Y;
-			io.KeyMap[(int)ImGuiKey.Z] = (int)SDL_Scancode.SDL_SCANCODE_Z;
-		}
-
-		void ImGui_ImplSDL2_NewFrame()
-		{
-			var io = ImGui.GetIO();
-
-			// Setup display size (every frame to accommodate for window resizing)
-			SDL_GetWindowSize(Window.window, out var w, out var h);
-			SDL_GL_GetDrawableSize(Window.window, out var display_w, out var display_h);
-			io.DisplaySize = new Vector2((float)w, (float)h);
-			if (w > 0 && h > 0)
-				io.DisplayFramebufferScale = new Vector2((float)display_w / w, (float)display_h / h);
-
-			// Setup time step (we don't use SDL_GetTicks() because it is using millisecond resolution)
-			var frequency = SDL_GetPerformanceFrequency();
-			var current_time = SDL_GetPerformanceCounter();
-			io.DeltaTime = g_Time > 0 ? (float)((double)(current_time - g_Time) / frequency) : (float)(1.0f / 60.0f);
-			if (io.DeltaTime <= 0)
-				io.DeltaTime = 0.016f;
-			g_Time = current_time;
-
-			ImGui_ImplSDL2_UpdateMousePosAndButtons();
-			ImGui_ImplSDL2_UpdateGamepads();
-		}
-
-		void ImGui_ImplSDL2_ProcessEvent(SDL_Event evt)
-		{
-			var io = ImGui.GetIO();
-			switch (evt.type)
-			{
-				case SDL_EventType.SDL_MOUSEWHEEL:
-					{
-						if (evt.wheel.x > 0) io.MouseWheelH += 1;
-						if (evt.wheel.x < 0) io.MouseWheelH -= 1;
-						if (evt.wheel.y > 0) io.MouseWheel += 1;
-						if (evt.wheel.y < 0) io.MouseWheel -= 1;
-						return;
-					}
-				case SDL_EventType.SDL_MOUSEBUTTONDOWN:
-					{
-						if (evt.button.button == SDL_BUTTON_LEFT) g_MousePressed[0] = true;
-						if (evt.button.button == SDL_BUTTON_RIGHT) g_MousePressed[1] = true;
-						if (evt.button.button == SDL_BUTTON_MIDDLE) g_MousePressed[2] = true;
-						return;
-					}
-				case SDL_EventType.SDL_TEXTINPUT:
-					{
-						//io.AddInputCharactersUTF8(evt.text.text);
-						return;
-					}
-				case SDL_EventType.SDL_KEYDOWN:
-				case SDL_EventType.SDL_KEYUP:
-					{
-						var key = evt.key.keysym.scancode;
-						io.KeysDown[(int)key] = (evt.type == SDL_EventType.SDL_KEYDOWN);
-						io.KeyShift = ((SDL_GetModState() & SDL_Keymod.KMOD_SHIFT) != 0);
-						io.KeyCtrl = ((SDL_GetModState() & SDL_Keymod.KMOD_CTRL) != 0);
-						io.KeyAlt = ((SDL_GetModState() & SDL_Keymod.KMOD_ALT) != 0);
-						io.KeySuper = ((SDL_GetModState() & SDL_Keymod.KMOD_GUI) != 0);
-						break;
-					}
-			}
-		}
-
-		void ImGui_ImplSDL2_UpdateMousePosAndButtons()
-		{
-			var io = ImGui.GetIO();
-
-			// Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
-			if (io.WantSetMousePos)
-				SDL_WarpMouseInWindow(Window.window, (int)io.MousePos.X, (int)io.MousePos.Y);
-			else
-				io.MousePos = new Vector2(float.MinValue, float.MinValue);
-
-			var mouse_buttons = SDL_GetMouseState(out var mx, out var my);
-			io.MouseDown[0] = g_MousePressed[0] || (mouse_buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;  // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
-			io.MouseDown[1] = g_MousePressed[1] || (mouse_buttons & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
-			io.MouseDown[2] = g_MousePressed[2] || (mouse_buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE)) != 0;
-			g_MousePressed[0] = g_MousePressed[1] = g_MousePressed[2] = false;
-
-			var focused_window = SDL_GetKeyboardFocus();
-			if (Window.window == focused_window)
-			{
-				// SDL_GetMouseState() gives mouse position seemingly based on the last window entered/focused(?)
-				// The creation of a new windows at runtime and SDL_CaptureMouse both seems to severely mess up with that, so we retrieve that position globally.
-				SDL_GetWindowPosition(focused_window, out var wx, out var wy);
-				SDL_GetGlobalMouseState(out mx, out my);
-				mx -= wx;
-				my -= wy;
-				io.MousePos = new Vector2((float)mx, (float)my);
-			}
-
-			// SDL_CaptureMouse() let the OS know e.g. that our imgui drag outside the SDL window boundaries shouldn't e.g. trigger the OS window resize cursor.
-			// The function is only supported from SDL 2.0.4 (released Jan 2016)
-			var any_mouse_button_down = ImGui.IsAnyMouseDown();
-			SDL_CaptureMouse(any_mouse_button_down ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
-		}
-
-		void ImGui_ImplSDL2_UpdateGamepads()
-		{ }
-
 		void ImGui_ImplOpenGL3_SetupRenderState(ImDrawDataPtr draw_data, int fb_width, int fb_height, uint vertex_array_object)
 		{
 			GL.glEnable(GL.EnableCap.Blend);
@@ -230,7 +76,7 @@ namespace Example
 			var B = draw_data.DisplayPos.Y + draw_data.DisplaySize.Y;
 
 			program["Texture"].SetValue(0);
-			program["ProjMtx"].SetValue(OpenGLLLLLLLL.Slim.Matrix4.CreateOrthographicOffCenter(L, R, B, T, -1, 1));
+			program["ProjMtx"].SetValue(Matrix4x4.CreateOrthographicOffCenter(L, R, B, T, -1, 1));
 			GL.glBindSampler(0, 0);
 
 			GL.glBindVertexArray(vertex_array_object);

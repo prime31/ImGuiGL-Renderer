@@ -15,29 +15,15 @@
     <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP3_0;USE_NUMERICS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenGL\OpenGL.csproj">
-    </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Assets\crate.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="Assets\crate.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\crate.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.72.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SDL2-CS\" />
-    <Folder Include="OpenGL\FIXME\" />
-    <Folder Include="OpenGL\Math\" />
+    <Folder Include="OpenGL\NumericsExtensions\" />
   </ItemGroup>
 </Project>

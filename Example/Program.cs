@@ -1,31 +1,25 @@
-﻿using System;
-using OpenGL.Platform;
-using OpenGLLLLLLLL.Slim;
+﻿using OpenGL.Platform;
+using SDL.GL.ImGui;
 using static SDL2.SDL;
 
 namespace Example
 {
 	class MainClass
 	{
-		static IDemo _demo;
-		static IDemo demo
-		{
-			get => _demo;
-			set
-			{
-				if (_demo is IDisposable disposable)
-					disposable.Dispose();
-				_demo = value;
-			}
-		}
-
+		static ImGuiDemo demo;
 		static bool quit;
 
 		public static void Main(string[] args)
 		{
 			Window.CreateWindow("Poop", 800, 600);
 			Window.OnEvent += HandleEvent;
-			demo = new ImGuiDemo();
+			demo = new ImGuiDemo(Window.window);
+
+
+
+			var flags = SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+			SDL_CreateWindow("fucker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 800, flags);
+
 
 			while (!quit)
 			{
@@ -50,6 +44,8 @@ namespace Example
 
 		static void HandleEvent(SDL_Event e)
 		{
+			demo.ImGui_ImplSDL2_ProcessEvent(e);
+
 			switch (e.type)
 			{
 				case SDL_EventType.SDL_QUIT:
@@ -63,24 +59,6 @@ namespace Example
 						{
 							case SDL_Keycode.SDLK_q:
 								quit = true;
-								break;
-							case SDL_Keycode.SDLK_0:
-								demo = null;
-								break;
-							case SDL_Keycode.SDLK_1:
-								demo = new Primitives();
-								break;
-							case SDL_Keycode.SDLK_2:
-								demo = new CubeDemo();
-								break;
-							case SDL_Keycode.SDLK_3:
-								demo = new QuadDemo();
-								break;
-							case SDL_Keycode.SDLK_4:
-								demo = new TexturedQuadDemo();
-								break;
-							case SDL_Keycode.SDLK_5:
-								demo = new ImGuiDemo();
 								break;
 						}
 						break;

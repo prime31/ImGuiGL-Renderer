@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace OpenGLLLLLLLL.Slim
+namespace SDL.GL.ImGui
 {
 	public static class Vector3Ext
 	{

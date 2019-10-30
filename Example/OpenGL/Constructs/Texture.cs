@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenGLLLLLLLL.Slim
+namespace SDL.GL.ImGui
 {
 	public class Texture : IDisposable
 	{

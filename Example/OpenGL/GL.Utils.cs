@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Numerics;
 using System.Text;
 
-namespace OpenGLLLLLLLL.Slim
+namespace SDL.GL.ImGui
 {
 	public static partial class GL
 	{
 		static uint[] uint1 = new uint[1];
 		static int[] int1 = new int[1];
 		static float[] matrix4Float = new float[16];
-		static float[] matrix3Float = new float[9];
 
 		public static uint GenBuffer()
 		{
@@ -57,25 +57,15 @@ namespace OpenGLLLLLLLL.Slim
 			return int1[0] == 1;
 		}
 
-		public static void UniformMatrix4fv(int location, Matrix4 param)
+		public static unsafe void UniformMatrix4fv(int location, Matrix4x4 param)
 		{
 			// use the statically allocated float[] for setting the uniform
-			matrix4Float[0] = param[0].X; matrix4Float[1] = param[0].Y; matrix4Float[2] = param[0].Z; matrix4Float[3] = param[0].W;
-			matrix4Float[4] = param[1].X; matrix4Float[5] = param[1].Y; matrix4Float[6] = param[1].Z; matrix4Float[7] = param[1].W;
-			matrix4Float[8] = param[2].X; matrix4Float[9] = param[2].Y; matrix4Float[10] = param[2].Z; matrix4Float[11] = param[2].W;
-			matrix4Float[12] = param[3].X; matrix4Float[13] = param[3].Y; matrix4Float[14] = param[3].Z; matrix4Float[15] = param[3].W;
+			matrix4Float[0] = param.M11; matrix4Float[1] = param.M12; matrix4Float[2] = param.M13; matrix4Float[3] = param.M14;
+			matrix4Float[4] = param.M21; matrix4Float[5] = param.M22; matrix4Float[6] = param.M23; matrix4Float[7] = param.M24;
+			matrix4Float[8] = param.M31; matrix4Float[9] = param.M32; matrix4Float[10] = param.M33; matrix4Float[11] = param.M34;
+			matrix4Float[12] = param.M41; matrix4Float[13] = param.M42; matrix4Float[14] = param.M43; matrix4Float[15] = param.M44;
 
 			glUniformMatrix4fv(location, 1, false, matrix4Float);
-		}
-
-		public static void UniformMatrix3fv(int location, Matrix3 param)
-		{
-			// use the statically allocated float[] for setting the uniform
-			matrix3Float[0] = param[0].X; matrix3Float[1] = param[0].Y; matrix3Float[2] = param[0].Z;
-			matrix3Float[3] = param[1].X; matrix3Float[4] = param[1].Y; matrix3Float[5] = param[1].Z;
-			matrix3Float[6] = param[2].X; matrix3Float[7] = param[2].Y; matrix3Float[8] = param[2].Z;
-
-			glUniformMatrix3fv(location, 1, false, matrix3Float);
 		}
 
 		public static void VertexAttribPointer(Int32 index, Int32 size, VertexAttribPointerType type, Boolean normalized, Int32 stride, IntPtr pointer)

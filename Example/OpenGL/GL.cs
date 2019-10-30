@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using static SDL2.SDL;
 
-namespace OpenGLLLLLLLL.Slim
+namespace SDL.GL.ImGui
 {
 	public static partial class GL
 	{
@@ -100,7 +100,7 @@ namespace OpenGLLLLLLLL.Slim
 		internal static GetProgramiv glGetProgramiv = _<GetProgramiv>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		internal delegate void GetProgramInfoLogDel(UInt32 program, Int32 maxLength, [OutAttribute] Int32[] length, [OutAttribute] System.Text.StringBuilder infoLog);
+		internal delegate void GetProgramInfoLogDel(uint program, Int32 maxLength, [OutAttribute] Int32[] length, [OutAttribute] System.Text.StringBuilder infoLog);
 		internal static GetProgramInfoLogDel glGetProgramInfoLog = _Del<GetProgramInfoLogDel>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
