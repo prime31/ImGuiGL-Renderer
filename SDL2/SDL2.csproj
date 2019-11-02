@@ -5,12 +5,4 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="ImGui.NET" Version="1.72.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\SDL2\SDL2.csproj" />
-    </ItemGroup>
-
 </Project>
