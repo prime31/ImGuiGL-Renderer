@@ -100,7 +100,7 @@ namespace SDL.ImGuiRenderer
 		public static GetProgramiv glGetProgramiv = _<GetProgramiv>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		public delegate void GetProgramInfoLogDel(uint program, Int32 maxLength, [OutAttribute] Int32[] length, [OutAttribute] System.Text.StringBuilder infoLog);
+		public delegate void GetProgramInfoLogDel(uint program, Int32 maxLength, [OutAttribute] Int32[] length, [OutAttribute] StringBuilder infoLog);
 		public static GetProgramInfoLogDel glGetProgramInfoLog = _Del<GetProgramInfoLogDel>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -132,11 +132,11 @@ namespace SDL.ImGuiRenderer
 		public static DeleteProgram glDeleteProgram = _<DeleteProgram>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		public delegate void GetActiveAttrib(UInt32 program, UInt32 index, Int32 bufSize, [Out] Int32[] length, [Out] Int32[] size, [Out] GL.ActiveAttribType[] type, [Out] System.Text.StringBuilder name);
+		public delegate void GetActiveAttrib(UInt32 program, UInt32 index, Int32 bufSize, [Out] Int32[] length, [Out] Int32[] size, [Out] ActiveAttribType[] type, [Out] StringBuilder name);
 		public static GetActiveAttrib glGetActiveAttrib = _<GetActiveAttrib>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		public delegate void GetActiveUniform(UInt32 program, UInt32 index, Int32 bufSize, [OutAttribute] Int32[] length, [OutAttribute] Int32[] size, [OutAttribute] GL.ActiveUniformType[] type, [OutAttribute] StringBuilder name);
+		public delegate void GetActiveUniform(UInt32 program, UInt32 index, Int32 bufSize, [OutAttribute] Int32[] length, [OutAttribute] Int32[] size, [OutAttribute] ActiveUniformType[] type, [OutAttribute] StringBuilder name);
 		public static GetActiveUniform glGetActiveUniform = _<GetActiveUniform>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -184,7 +184,7 @@ namespace SDL.ImGuiRenderer
 		public static BindVertexArray glBindVertexArray = _<BindVertexArray>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		public delegate void BindBuffer(GL.BufferTarget target, UInt32 buffer);
+		public delegate void BindBuffer(BufferTarget target, UInt32 buffer);
 		public static BindBuffer glBindBuffer = _<BindBuffer>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]

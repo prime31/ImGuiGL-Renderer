@@ -2,12 +2,13 @@
 using ImGuiNET;
 using static SDL2.SDL;
 
+
 namespace SDL.ImGuiRenderer
 {
 	public partial class ImGuiDemo
 	{
 		float _time;
-		readonly bool[] _mousePressed = { false, false, false };
+		readonly bool[] _mousePressed = {false, false, false};
 
 		void ImGui_ImplSDL2_Init()
 		{
@@ -65,37 +66,37 @@ namespace SDL.ImGuiRenderer
 			switch (evt.type)
 			{
 				case SDL_EventType.SDL_MOUSEWHEEL:
-					{
-						if (evt.wheel.x > 0) io.MouseWheelH += 1;
-						if (evt.wheel.x < 0) io.MouseWheelH -= 1;
-						if (evt.wheel.y > 0) io.MouseWheel += 1;
-						if (evt.wheel.y < 0) io.MouseWheel -= 1;
-						return;
-					}
+				{
+					if (evt.wheel.x > 0) io.MouseWheelH += 1;
+					if (evt.wheel.x < 0) io.MouseWheelH -= 1;
+					if (evt.wheel.y > 0) io.MouseWheel += 1;
+					if (evt.wheel.y < 0) io.MouseWheel -= 1;
+					return;
+				}
 				case SDL_EventType.SDL_MOUSEBUTTONDOWN:
-					{
-						if (evt.button.button == SDL_BUTTON_LEFT) _mousePressed[0] = true;
-						if (evt.button.button == SDL_BUTTON_RIGHT) _mousePressed[1] = true;
-						if (evt.button.button == SDL_BUTTON_MIDDLE) _mousePressed[2] = true;
-						return;
-					}
+				{
+					if (evt.button.button == SDL_BUTTON_LEFT) _mousePressed[0] = true;
+					if (evt.button.button == SDL_BUTTON_RIGHT) _mousePressed[1] = true;
+					if (evt.button.button == SDL_BUTTON_MIDDLE) _mousePressed[2] = true;
+					return;
+				}
 				case SDL_EventType.SDL_TEXTINPUT:
-					{
-						var str = new string((sbyte*)evt.text.text);
-						io.AddInputCharactersUTF8(str);
-						return;
-					}
+				{
+					var str = new string((sbyte*)evt.text.text);
+					io.AddInputCharactersUTF8(str);
+					return;
+				}
 				case SDL_EventType.SDL_KEYDOWN:
 				case SDL_EventType.SDL_KEYUP:
-					{
-						var key = evt.key.keysym.scancode;
-						io.KeysDown[(int)key] = (evt.type == SDL_EventType.SDL_KEYDOWN);
-						io.KeyShift = ((SDL_GetModState() & SDL_Keymod.KMOD_SHIFT) != 0);
-						io.KeyCtrl = ((SDL_GetModState() & SDL_Keymod.KMOD_CTRL) != 0);
-						io.KeyAlt = ((SDL_GetModState() & SDL_Keymod.KMOD_ALT) != 0);
-						io.KeySuper = ((SDL_GetModState() & SDL_Keymod.KMOD_GUI) != 0);
-						break;
-					}
+				{
+					var key = evt.key.keysym.scancode;
+					io.KeysDown[(int)key] = evt.type == SDL_EventType.SDL_KEYDOWN;
+					io.KeyShift = (SDL_GetModState() & SDL_Keymod.KMOD_SHIFT) != 0;
+					io.KeyCtrl = (SDL_GetModState() & SDL_Keymod.KMOD_CTRL) != 0;
+					io.KeyAlt = (SDL_GetModState() & SDL_Keymod.KMOD_ALT) != 0;
+					io.KeySuper = (SDL_GetModState() & SDL_Keymod.KMOD_GUI) != 0;
+					break;
+				}
 			}
 		}
 
@@ -110,7 +111,10 @@ namespace SDL.ImGuiRenderer
 				io.MousePos = new Vector2(float.MinValue, float.MinValue);
 
 			var mouseButtons = SDL_GetMouseState(out var mx, out var my);
-			io.MouseDown[0] = _mousePressed[0] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;  // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
+			io.MouseDown[0] =
+				_mousePressed[0] ||
+				(mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT)) !=
+				0; // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
 			io.MouseDown[1] = _mousePressed[1] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
 			io.MouseDown[2] = _mousePressed[2] || (mouseButtons & SDL_BUTTON(SDL_BUTTON_MIDDLE)) != 0;
 			_mousePressed[0] = _mousePressed[1] = _mousePressed[2] = false;

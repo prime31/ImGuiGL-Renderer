@@ -39,7 +39,9 @@ namespace OpenGL.Platform
 
 			window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 
-            if (window == IntPtr.Zero)
+			SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 800, flags);
+
+			if (window == IntPtr.Zero)
 				throw new Exception("CouldNotCreateWindow");
 
 			windowID = SDL_GetWindowID(window);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Numerics;
+using static SDL.ImGuiRenderer.GL;
 
 namespace SDL.ImGuiRenderer
 {
@@ -10,7 +11,7 @@ namespace SDL.ImGuiRenderer
 		Attribute
 	}
 
-	public sealed class ShaderProgramParam
+	public sealed class GLShaderProgramParam
 	{
 		/// <summary>
 		/// Specifies the C# equivalent of the GLSL data type.
@@ -39,14 +40,14 @@ namespace SDL.ImGuiRenderer
 
 		public uint ProgramId;
 
-		public ShaderProgramParam(Type type, ParamType paramType, string name)
+		public GLShaderProgramParam(Type type, ParamType paramType, string name)
 		{
 			Type = type;
 			ParamType = paramType;
 			Name = name;
 		}
 
-		public ShaderProgramParam(Type type, ParamType paramType, string name, uint program, int location) : this(type, paramType, name)
+		public GLShaderProgramParam(Type type, ParamType paramType, string name, uint program, int location) : this(type, paramType, name)
 		{
 			ProgramId = Program;
 			Location = location;
@@ -56,56 +57,56 @@ namespace SDL.ImGuiRenderer
 		/// Gets the location of the parameter in a compiled OpenGL program.
 		/// </summary>
 		/// <param name="Program">Specifies the shader program that contains this parameter.</param>
-		public void GetLocation(ShaderProgram Program)
+		public void GetLocation(GLShaderProgram Program)
 		{
 			Program.Use();
 			if (ProgramId == 0)
 			{
 				ProgramId = Program.ProgramID;
-				Location = (ParamType == ParamType.Uniform ? Program.GetUniformLocation(Name) : Program.GetAttributeLocation(Name));
+				Location = ParamType == ParamType.Uniform ? Program.GetUniformLocation(Name) : Program.GetAttributeLocation(Name);
 			}
 		}
 
 		public void SetValue(bool param)
 		{
 			EnsureType<bool>();
-			GL.glUniform1i(Location, (param) ? 1 : 0);
+			glUniform1i(Location, param ? 1 : 0);
 		}
 
 		public void SetValue(int param)
 		{
 			EnsureType<int>();
-			GL.glUniform1i(Location, param);
+			glUniform1i(Location, param);
 		}
 
 		public void SetValue(float param)
 		{
 			EnsureType<float>();
-			GL.glUniform1f(Location, param);
+			glUniform1f(Location, param);
 		}
 
 		public void SetValue(Vector2 param)
 		{
 			EnsureType<Vector2>();
-			GL.glUniform2f(Location, param.X, param.Y);
+			glUniform2f(Location, param.X, param.Y);
 		}
 
 		public void SetValue(Vector3 param)
 		{
 			EnsureType<Vector3>();
-			GL.glUniform3f(Location, param.X, param.Y, param.Z);
+			glUniform3f(Location, param.X, param.Y, param.Z);
 		}
 
 		public void SetValue(Vector4 param)
 		{
 			EnsureType<Vector4>();
-			GL.glUniform4f(Location, param.X, param.Y, param.Z, param.W);
+			glUniform4f(Location, param.X, param.Y, param.Z, param.W);
 		}
 
 		public void SetValue(Matrix4x4 param)
 		{
 			EnsureType<Matrix4x4>();
-			GL.UniformMatrix4fv(Location, param);
+			UniformMatrix4fv(Location, param);
 		}
 
 		public void SetValue(float[] param)
@@ -113,32 +114,32 @@ namespace SDL.ImGuiRenderer
 			if (param.Length == 16)
 			{
 				EnsureType<Matrix4x4>();
-				GL.glUniformMatrix4fv(Location, 1, false, param);
+				glUniformMatrix4fv(Location, 1, false, param);
 			}
 			else if (param.Length == 9)
 			{
 				EnsureType<Exception>();
-				GL.glUniformMatrix3fv(Location, 1, false, param);
+				glUniformMatrix3fv(Location, 1, false, param);
 			}
 			else if (param.Length == 4)
 			{
 				EnsureType<Vector4>();
-				GL.glUniform4f(Location, param[0], param[1], param[2], param[3]);
+				glUniform4f(Location, param[0], param[1], param[2], param[3]);
 			}
 			else if (param.Length == 3)
 			{
 				EnsureType<Vector3>();
-				GL.glUniform3f(Location, param[0], param[1], param[2]);
+				glUniform3f(Location, param[0], param[1], param[2]);
 			}
 			else if (param.Length == 2)
 			{
 				EnsureType<Vector2>();
-				GL.glUniform2f(Location, param[0], param[1]);
+				glUniform2f(Location, param[0], param[1]);
 			}
 			else if (param.Length == 1)
 			{
 				EnsureType<float>();
-				GL.glUniform1f(Location, param[0]);
+				glUniform1f(Location, param[0]);
 			}
 			else
 			{

@@ -38,7 +38,7 @@ namespace SDL2
 		#region SDL2# Variables
 
 		/* Used by DllImport to load the native library. */
-		private const string nativeLibName = "SDL2_ttf";
+		const string nativeLibName = "SDL2_ttf";
 
 		#endregion
 
@@ -74,7 +74,7 @@ namespace SDL2
 		}
 
 		[DllImport(nativeLibName, EntryPoint = "TTF_LinkedVersion", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_LinkedVersion();
+		static extern IntPtr INTERNAL_TTF_LinkedVersion();
 		public static SDL.SDL_version TTF_LinkedVersion()
 		{
 			SDL.SDL_version result;
@@ -94,7 +94,7 @@ namespace SDL2
 
 		/* IntPtr refers to a TTF_Font* */
 		[DllImport(nativeLibName, EntryPoint = "TTF_OpenFont", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_OpenFont(
+		static extern IntPtr INTERNAL_TTF_OpenFont(
 			byte[] file,
 			int ptsize
 		);
@@ -117,7 +117,7 @@ namespace SDL2
 
 		/* IntPtr refers to a TTF_Font* */
 		[DllImport(nativeLibName, EntryPoint = "TTF_OpenFontIndex", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_OpenFontIndex(
+		static extern IntPtr INTERNAL_TTF_OpenFontIndex(
 			byte[] file,
 			int ptsize,
 			long index
@@ -202,7 +202,7 @@ namespace SDL2
 
 		/* font refers to a TTF_Font* */
 		[DllImport(nativeLibName, EntryPoint = "TTF_FontFaceFamilyName", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_FontFaceFamilyName(
+		static extern IntPtr INTERNAL_TTF_FontFaceFamilyName(
 			IntPtr font
 		);
 		public static string TTF_FontFaceFamilyName(IntPtr font)
@@ -214,7 +214,7 @@ namespace SDL2
 
 		/* font refers to a TTF_Font* */
 		[DllImport(nativeLibName, EntryPoint = "TTF_FontFaceStyleName", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_FontFaceStyleName(
+		static extern IntPtr INTERNAL_TTF_FontFaceStyleName(
 			IntPtr font
 		);
 		public static string TTF_FontFaceStyleName(IntPtr font)
@@ -293,7 +293,7 @@ namespace SDL2
 
 		/* IntPtr refers to an SDL_Surface*, font to a TTF_Font* */
 		[DllImport(nativeLibName, EntryPoint = "TTF_RenderUTF8_Solid", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_RenderUTF8_Solid(
+		static extern IntPtr INTERNAL_TTF_RenderUTF8_Solid(
 			IntPtr font,
 			byte[] text,
 			SDL.SDL_Color fg
@@ -339,7 +339,7 @@ namespace SDL2
 
 		/* IntPtr refers to an SDL_Surface*, font to a TTF_Font* */
 		[DllImport(nativeLibName, EntryPoint = "TTF_RenderUTF8_Shaded", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_RenderUTF8_Shaded(
+		static extern IntPtr INTERNAL_TTF_RenderUTF8_Shaded(
 			IntPtr font,
 			byte[] text,
 			SDL.SDL_Color fg,
@@ -389,7 +389,7 @@ namespace SDL2
 
 		/* IntPtr refers to an SDL_Surface*, font to a TTF_Font* */
 		[DllImport(nativeLibName, EntryPoint = "TTF_RenderUTF8_Blended", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_RenderUTF8_Blended(
+		static extern IntPtr INTERNAL_TTF_RenderUTF8_Blended(
 			IntPtr font,
 			byte[] text,
 			SDL.SDL_Color fg
@@ -427,7 +427,7 @@ namespace SDL2
 
 		/* IntPtr refers to an SDL_Surface*, font to a TTF_Font* */
 		[DllImport(nativeLibName, EntryPoint = "TTF_RenderUTF8_Blended_Wrapped", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_TTF_RenderUTF8_Blended_Wrapped(
+		static extern IntPtr INTERNAL_TTF_RenderUTF8_Blended_Wrapped(
 			IntPtr font,
 			byte[] text,
 			SDL.SDL_Color fg,

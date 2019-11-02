@@ -4,6 +4,9 @@ using System.Text;
 
 namespace SDL.ImGuiRenderer
 {
+	/// <summary>
+	/// the methods here are just convenience wrappers for calling the raw gl* method
+	/// </summary>
 	public static partial class GL
 	{
 		static readonly uint[] uint1 = new uint[1];
@@ -31,7 +34,7 @@ namespace SDL.ImGuiRenderer
 		public static void ShaderSource(uint shader, string source)
 		{
 			int1[0] = source.Length;
-			glShaderSource(shader, 1, new string[] { source }, int1);
+			glShaderSource(shader, 1, new[] { source }, int1);
 		}
 
 		public static bool GetShaderCompileStatus(UInt32 shader)

@@ -38,7 +38,7 @@ namespace SDL2
 		#region SDL2# Variables
 
 		/* Used by DllImport to load the native library. */
-		private const string nativeLibName = "SDL2_image";
+		const string nativeLibName = "SDL2_image";
 
 		#endregion
 
@@ -69,7 +69,7 @@ namespace SDL2
 		}
 
 		[DllImport(nativeLibName, EntryPoint = "IMG_Linked_Version", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_IMG_Linked_Version();
+		static extern IntPtr INTERNAL_IMG_Linked_Version();
 		public static SDL.SDL_version IMG_Linked_Version()
 		{
 			SDL.SDL_version result;
@@ -89,7 +89,7 @@ namespace SDL2
 
 		/* IntPtr refers to an SDL_Surface* */
 		[DllImport(nativeLibName, EntryPoint = "IMG_Load", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_IMG_Load(
+		static extern IntPtr INTERNAL_IMG_Load(
 			byte[] file
 		);
 		public static IntPtr IMG_Load(string file)
@@ -108,7 +108,7 @@ namespace SDL2
 		/* src refers to an SDL_RWops*, IntPtr to an SDL_Surface* */
 		/* THIS IS A PUBLIC RWops FUNCTION! */
 		[DllImport(nativeLibName, EntryPoint = "IMG_LoadTyped_RW", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_IMG_LoadTyped_RW(
+		static extern IntPtr INTERNAL_IMG_LoadTyped_RW(
 			IntPtr src,
 			int freesrc,
 			byte[] type
@@ -127,7 +127,7 @@ namespace SDL2
 
 		/* IntPtr refers to an SDL_Texture*, renderer to an SDL_Renderer* */
 		[DllImport(nativeLibName, EntryPoint = "IMG_LoadTexture", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_IMG_LoadTexture(
+		static extern IntPtr INTERNAL_IMG_LoadTexture(
 			IntPtr renderer,
 			byte[] file
 		);
@@ -159,7 +159,7 @@ namespace SDL2
 		 */
 		/* THIS IS A PUBLIC RWops FUNCTION! */
 		[DllImport(nativeLibName, EntryPoint = "IMG_LoadTextureTyped_RW", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_IMG_LoadTextureTyped_RW(
+		static extern IntPtr INTERNAL_IMG_LoadTextureTyped_RW(
 			IntPtr renderer,
 			IntPtr src,
 			int freesrc,
@@ -188,7 +188,7 @@ namespace SDL2
 
 		/* surface refers to an SDL_Surface* */
 		[DllImport(nativeLibName, EntryPoint = "IMG_SavePNG", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int INTERNAL_IMG_SavePNG(
+		static extern int INTERNAL_IMG_SavePNG(
 			IntPtr surface,
 			byte[] file
 		);
@@ -211,7 +211,7 @@ namespace SDL2
 
 		/* surface refers to an SDL_Surface* */
 		[DllImport(nativeLibName, EntryPoint = "IMG_SaveJPG", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int INTERNAL_IMG_SaveJPG(
+		static extern int INTERNAL_IMG_SaveJPG(
 			IntPtr surface,
 			byte[] file,
 			int quality

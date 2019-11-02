@@ -38,7 +38,7 @@ namespace SDL2
 		#region SDL2# Variables
 
 		/* Used by DllImport to load the native library. */
-		private const string nativeLibName = "SDL2_mixer";
+		const string nativeLibName = "SDL2_mixer";
 
 		#endregion
 
@@ -136,7 +136,7 @@ namespace SDL2
 		}
 
 		[DllImport(nativeLibName, EntryPoint = "MIX_Linked_Version", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_MIX_Linked_Version();
+		static extern IntPtr INTERNAL_MIX_Linked_Version();
 		public static SDL.SDL_version MIX_Linked_Version()
 		{
 			SDL.SDL_version result;
@@ -190,7 +190,7 @@ namespace SDL2
 
 		/* IntPtr refers to a Mix_Music* */
 		[DllImport(nativeLibName, EntryPoint = "Mix_LoadMUS", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_Mix_LoadMUS(
+		static extern IntPtr INTERNAL_Mix_LoadMUS(
 			byte[] file
 		);
 		public static IntPtr Mix_LoadMUS(string file)
@@ -225,7 +225,7 @@ namespace SDL2
 		public static extern int Mix_GetNumChunkDecoders();
 
 		[DllImport(nativeLibName, EntryPoint = "Mix_GetChunkDecoder", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_Mix_GetChunkDecoder(int index);
+		static extern IntPtr INTERNAL_Mix_GetChunkDecoder(int index);
 		public static string Mix_GetChunkDecoder(int index)
 		{
 			return SDL.UTF8_ToManaged(
@@ -237,7 +237,7 @@ namespace SDL2
 		public static extern int Mix_GetNumMusicDecoders();
 
 		[DllImport(nativeLibName, EntryPoint = "Mix_GetMusicDecoder", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_Mix_GetMusicDecoder(int index);
+		static extern IntPtr INTERNAL_Mix_GetMusicDecoder(int index);
 		public static string Mix_GetMusicDecoder(int index)
 		{
 			return SDL.UTF8_ToManaged(
@@ -463,7 +463,7 @@ namespace SDL2
 		public static extern int Mix_PlayingMusic();
 
 		[DllImport(nativeLibName, EntryPoint = "Mix_SetMusicCMD", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int INTERNAL_Mix_SetMusicCMD(
+		static extern int INTERNAL_Mix_SetMusicCMD(
 			byte[] command
 		);
 		public static int Mix_SetMusicCMD(string command)
@@ -480,7 +480,7 @@ namespace SDL2
 		public static extern int Mix_GetSynchroValue();
 
 		[DllImport(nativeLibName, EntryPoint = "Mix_SetSoundFonts", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int INTERNAL_Mix_SetSoundFonts(
+		static extern int INTERNAL_Mix_SetSoundFonts(
 			byte[] paths
 		);
 		public static int Mix_SetSoundFonts(string paths)
@@ -491,7 +491,7 @@ namespace SDL2
 		}
 
 		[DllImport(nativeLibName, EntryPoint = "Mix_GetSoundFonts", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr INTERNAL_Mix_GetSoundFonts();
+		static extern IntPtr INTERNAL_Mix_GetSoundFonts();
 		public static string Mix_GetSoundFonts()
 		{
 			return SDL.UTF8_ToManaged(INTERNAL_Mix_GetSoundFonts());

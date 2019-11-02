@@ -1,8 +1,9 @@
 ﻿using System;
+using static SDL.ImGuiRenderer.GL;
 
 namespace SDL.ImGuiRenderer
 {
-	public sealed class Shader : IDisposable
+	public sealed class GLShader : IDisposable
 	{
 		/// <summary>
 		/// Specifies the OpenGL ShaderID.
@@ -12,29 +13,26 @@ namespace SDL.ImGuiRenderer
 		/// <summary>
 		/// Specifies the type of shader.
 		/// </summary>
-		public GL.ShaderType ShaderType { get; private set; }
+		public ShaderType ShaderType { get; private set; }
 
 		/// <summary>
 		/// Returns Gl.GetShaderInfoLog(ShaderID), which contains any compilation errors.
 		/// </summary>
-		public string ShaderLog => GL.GetShaderInfoLog(ShaderID);
+		public string ShaderLog => GetShaderInfoLog(ShaderID);
 
-		public Shader(string source, GL.ShaderType type)
+		public GLShader(string source, ShaderType type)
 		{
 			ShaderType = type;
-			ShaderID = GL.glCreateShader(type);
+			ShaderID = glCreateShader(type);
 
-			GL.ShaderSource(ShaderID, source);
-			GL.glCompileShader(ShaderID);
+			ShaderSource(ShaderID, source);
+			glCompileShader(ShaderID);
 
-			if (!GL.GetShaderCompileStatus(ShaderID))
+			if (!GetShaderCompileStatus(ShaderID))
 				throw new Exception(ShaderLog);
 		}
 
-		~Shader()
-		{
-			Dispose(false);
-		}
+		~GLShader() => Dispose(false);
 
 		public void Dispose()
 		{
@@ -46,7 +44,7 @@ namespace SDL.ImGuiRenderer
 		{
 			if (ShaderID != 0)
 			{
-				GL.glDeleteShader(ShaderID);
+				glDeleteShader(ShaderID);
 				ShaderID = 0;
 			}
 		}

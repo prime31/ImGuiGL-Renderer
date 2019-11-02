@@ -4,7 +4,7 @@ using static SDL2.SDL;
 
 namespace Example
 {
-	class MainClass
+	internal class MainClass
 	{
 		static ImGuiDemo demo;
 		static bool quit;

@@ -58,7 +58,7 @@ namespace SDL.ImGuiRenderer
 		/// <returns>The element of the Vector3 as indexed by i.</returns>
 		public static float Get(this Vector3 v, int index)
 		{
-			return (index == 0 ? v.X : (index == 1 ? v.Y : v.Z));
+			return index == 0 ? v.X : index == 1 ? v.Y : v.Z;
 		}
 	}
 }
