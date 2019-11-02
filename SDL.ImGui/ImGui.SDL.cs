@@ -57,7 +57,6 @@ namespace SDL.ImGuiRenderer
 			_time = currentTime;
 
 			ImGui_ImplSDL2_UpdateMousePosAndButtons();
-			ImGui_ImplSDL2_UpdateGamepads();
 		}
 
 		public unsafe void ImGui_ImplSDL2_ProcessEvent(SDL_Event evt)
@@ -129,12 +128,8 @@ namespace SDL.ImGuiRenderer
 			}
 
 			// SDL_CaptureMouse() let the OS know e.g. that our imgui drag outside the SDL window boundaries shouldn't e.g. trigger the OS window resize cursor.
-			// The function is only supported from SDL 2.0.4 (released Jan 2016)
 			var any_mouse_button_down = ImGui.IsAnyMouseDown();
 			SDL_CaptureMouse(any_mouse_button_down ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
 		}
-
-		void ImGui_ImplSDL2_UpdateGamepads()
-		{ }
 	}
 }

@@ -50,7 +50,7 @@ namespace SDL.ImGuiRenderer
 
 			var io = ImGui.GetIO();
 			GL.glViewport(0, 0, (int)io.DisplaySize.X, (int)io.DisplaySize.Y);
-			GL.glClearColor(0.8f, 0.8f, 0.8f, 1);
+			GL.glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
 			GL.glClear(GL.ClearBufferMask.ColorBufferBit | GL.ClearBufferMask.DepthBufferBit);
 
 			ImGui_ImplOpenGL3_RenderDrawData();
@@ -90,11 +90,8 @@ namespace SDL.ImGuiRenderer
 
 			var drawVertSize = Marshal.SizeOf<ImDrawVert>();
 			GL.VertexAttribPointer(_shader["Position"].Location, 2, GL.VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("pos"));
-			//glVertexAttribPointer(g_AttribLocationVtxPos, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, pos));
 			GL.VertexAttribPointer(_shader["UV"].Location, 2, GL.VertexAttribPointerType.Float, false, drawVertSize, Marshal.OffsetOf<ImDrawVert>("uv"));
-			//glVertexAttribPointer(g_AttribLocationVtxUV, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, uv));
-			GL.VertexAttribPointer(_shader["Color"].Location, 2, GL.VertexAttribPointerType.Byte, true, drawVertSize, Marshal.OffsetOf<ImDrawVert>("col"));
-			//glVertexAttribPointer(g_AttribLocationVtxColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)IM_OFFSETOF(ImDrawVert, col));
+			GL.VertexAttribPointer(_shader["Color"].Location, 4, GL.VertexAttribPointerType.UnsignedByte, true, drawVertSize, Marshal.OffsetOf<ImDrawVert>("col"));
 		}
 
 		unsafe void ImGui_ImplOpenGL3_RenderDrawData()
@@ -108,7 +105,6 @@ namespace SDL.ImGuiRenderer
 				return;
 
 			var vertex_array_object = GL.GenVertexArray();
-			//glGenVertexArrays(1, &vertex_array_object);
 			ImGui_ImplOpenGL3_SetupRenderState(draw_data, fb_width, fb_height, vertex_array_object);
 
 			var clip_off = draw_data.DisplayPos;
@@ -119,18 +115,16 @@ namespace SDL.ImGuiRenderer
 			var lastTexId = ImGui.GetIO().Fonts.TexID;
 			GL.glBindTexture(GL.TextureTarget.Texture2D, (uint)lastTexId);
 
+			var drawVertSize = Marshal.SizeOf<ImDrawVert>();
+			var drawIdxSize = sizeof(ushort);
+
 			for (var n = 0; n < draw_data.CmdListsCount; n++)
 			{
 				var cmd_list = draw_data.CmdListsRange[n];
 
 				// Upload vertex/index buffers
-				var drawVertSize = Marshal.SizeOf<ImDrawVert>();
-				var drawIdxSize = 2;
-
 				GL.glBufferData(GL.BufferTarget.ArrayBuffer, (IntPtr)(cmd_list.VtxBuffer.Size * drawVertSize), cmd_list.VtxBuffer.Data, GL.BufferUsageHint.StreamDraw);
-				//glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)cmd_list->VtxBuffer.Size * sizeof(ImDrawVert), (const GLvoid*)cmd_list->VtxBuffer.Data, GL_STREAM_DRAW);
 				GL.glBufferData(GL.BufferTarget.ElementArrayBuffer, (IntPtr)(cmd_list.IdxBuffer.Size * drawIdxSize), cmd_list.IdxBuffer.Data, GL.BufferUsageHint.StreamDraw);
-				//glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx), (const GLvoid*)cmd_list->IdxBuffer.Data, GL_STREAM_DRAW);
 
 				for (var cmd_i = 0; cmd_i < cmd_list.CmdBuffer.Size; cmd_i++)
 				{
@@ -141,11 +135,16 @@ namespace SDL.ImGuiRenderer
 					}
 					else
 					{
+
 						// Project scissor/clipping rectangles into framebuffer space
 						var clip_rect = pcmd.ClipRect;
-						GL.glScissor((int)clip_rect.X, (int)clip_rect.Y, (int)(clip_rect.Z - clip_rect.X), (int)(clip_rect.W - clip_rect.Y));
-						//Gl.Scissor((int)clip_rect.X, (int)(fb_height - clip_rect.X), (int)(clip_rect.Z - clip_rect.X), (int)(clip_rect.W - clip_rect.Y));
-						//glScissor((int)clip_rect.x, (int)(fb_height - clip_rect.w), (int)(clip_rect.z - clip_rect.x), (int)(clip_rect.w - clip_rect.y));
+
+						clip_rect.X = pcmd.ClipRect.X - clip_off.X;
+						clip_rect.Y = pcmd.ClipRect.Y - clip_off.Y;
+						clip_rect.Z = pcmd.ClipRect.Z - clip_off.X;
+						clip_rect.W = pcmd.ClipRect.W - clip_off.Y;
+
+						GL.glScissor((int)clip_rect.X, (int)(fb_height - clip_rect.W), (int)(clip_rect.Z - clip_rect.X), (int)(clip_rect.W - clip_rect.Y));
 
 						// Bind texture, Draw
 						if (pcmd.TextureId != IntPtr.Zero)
@@ -158,13 +157,11 @@ namespace SDL.ImGuiRenderer
 						}
 
 						GL.glDrawElementsBaseVertex(GL.BeginMode.Triangles, (int)pcmd.ElemCount, drawIdxSize == 2 ? GL.DrawElementsType.UnsignedShort : GL.DrawElementsType.UnsignedInt, (IntPtr)(pcmd.IdxOffset * drawIdxSize), (int)pcmd.VtxOffset);
-						//glDrawElementsBaseVertex(GL_TRIANGLES, (GLsizei)pcmd->ElemCount, sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(intptr_t)(pcmd->IdxOffset * sizeof(ImDrawIdx)), (GLint)pcmd->VtxOffset);
 					}
 				}
 			}
 
 			GL.DeleteVertexArray(vertex_array_object);
-			//glDeleteVertexArrays(1, &vertex_array_object);
 		}
 
 		public static string VertexShader = @"

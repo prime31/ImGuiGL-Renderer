@@ -54,6 +54,7 @@ namespace Example
 					{
 						switch (e.key.keysym.sym)
 						{
+							case SDL_Keycode.SDLK_ESCAPE:
 							case SDL_Keycode.SDLK_q:
 								quit = true;
 								break;
