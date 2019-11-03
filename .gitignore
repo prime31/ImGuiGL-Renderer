@@ -9,3 +9,4 @@ SDL2/bin
 SDL2/obj
 ImGuiGL/bin
 ImGuiGL/obj
+.idea
