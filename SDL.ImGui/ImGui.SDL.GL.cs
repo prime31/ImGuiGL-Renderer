@@ -8,10 +8,9 @@ namespace SDL.ImGuiRenderer
 {
 	public partial class ImGuiDemoRenderer : IDisposable
 	{
-		IntPtr _window;
+		readonly IntPtr _window;
 		GLShaderProgram _shader;
-		uint _vboHandle, _elementsHandle, _vertexArrayObject;
-		GLTexture _fontTex;
+		uint _vboHandle, _elementsHandle, _vertexArrayObject, _fontTextureId;
 
 		public ImGuiDemoRenderer(IntPtr window)
 		{
@@ -22,7 +21,7 @@ namespace SDL.ImGuiRenderer
 
 			ImGui.SetCurrentContext(ImGui.CreateContext());
 			RebuildFontAtlas();
-			ImGui_ImplSDL2_Init();
+			InitKeyMap();
 
 			_vboHandle = GenBuffer();
 			_elementsHandle = GenBuffer();
@@ -36,32 +35,24 @@ namespace SDL.ImGuiRenderer
 			fonts.AddFontDefault();
 			fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int _);
 
-			_fontTex = new GLTexture((IntPtr)pixelData, width, height, PixelFormat.Rgba, PixelInternalFormat.Rgba);
+			_fontTextureId = SDLGL.LoadTexture((IntPtr)pixelData, width, height);
 
-			fonts.TexID = (IntPtr)_fontTex.TextureID;
+			fonts.TexID = (IntPtr)_fontTextureId;
 			fonts.ClearTexData();
 		}
 
-		public void NewFrame()
-		{
-			ImGui_ImplSDL2_NewFrame();
-			ImGui.NewFrame();
-		}
-
-		float wtf = 0.45f;
 		public void Render()
 		{
 			ImGui.Render();
-			wtf += 0.005f;
-			if (wtf > 1) wtf = 0;
-			Console.WriteLine($"clear: {wtf}");
 
 			var io = ImGui.GetIO();
 			glViewport(0, 0, (int)io.DisplaySize.X, (int)io.DisplaySize.Y);
-			glClearColor(wtf, 0.55f, 0.60f, 1.00f);
+			glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
 			glClear(ClearBufferMask.ColorBufferBit);
 
 			RenderDrawData();
+
+			glDisable(EnableCap.ScissorTest);
 		}
 
 		void SetupRenderState(ImDrawDataPtr drawData, int fbWidth, int fbHeight)
@@ -176,9 +167,10 @@ namespace SDL.ImGuiRenderer
 				DeleteBuffer(_vboHandle);
 				DeleteBuffer(_elementsHandle);
 				DeleteVertexArray(_vertexArrayObject);
-				_fontTex.Dispose();
+				DeleteTexture(_fontTextureId);
 			}
 		}
+
 
 		public static string VertexShader = @"
 #version 330

@@ -10,7 +10,7 @@ namespace SDL.ImGuiRenderer
 		float _time;
 		readonly bool[] _mousePressed = {false, false, false};
 
-		void ImGui_ImplSDL2_Init()
+		void InitKeyMap()
 		{
 			var io = ImGui.GetIO();
 
@@ -38,8 +38,9 @@ namespace SDL.ImGuiRenderer
 			io.KeyMap[(int)ImGuiKey.Z] = (int)SDL_Scancode.SDL_SCANCODE_Z;
 		}
 
-		void ImGui_ImplSDL2_NewFrame()
+		public void NewFrame()
 		{
+			ImGui.NewFrame();
 			var io = ImGui.GetIO();
 
 			// Setup display size (every frame to accommodate for window resizing)
@@ -57,7 +58,7 @@ namespace SDL.ImGuiRenderer
 				io.DeltaTime = 0.016f;
 			_time = currentTime;
 
-			ImGui_ImplSDL2_UpdateMousePosAndButtons();
+			UpdateMousePosAndButtons();
 		}
 
 		public unsafe void ProcessEvent(SDL_Event evt)
@@ -100,7 +101,7 @@ namespace SDL.ImGuiRenderer
 			}
 		}
 
-		void ImGui_ImplSDL2_UpdateMousePosAndButtons()
+		void UpdateMousePosAndButtons()
 		{
 			var io = ImGui.GetIO();
 
