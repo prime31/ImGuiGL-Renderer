@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace SDL.ImGuiRenderer
+namespace SDLImGuiGL
 {
 	public static class Vector3Ext
 	{

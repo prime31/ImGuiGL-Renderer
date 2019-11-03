@@ -3,7 +3,7 @@ using ImGuiNET;
 using static SDL2.SDL;
 
 
-namespace SDL.ImGuiRenderer
+namespace SDLImGuiGL
 {
 	public partial class ImGuiGLRenderer
 	{

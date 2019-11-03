@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SDL.ImGuiRenderer
+namespace SDLImGuiGL
 {
 	public unsafe static partial class GL
 	{

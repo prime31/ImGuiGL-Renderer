@@ -1,7 +1,7 @@
 ﻿using System;
-using static SDL.ImGuiRenderer.GL;
+using static SDLImGuiGL.GL;
 
-namespace SDL.ImGuiRenderer
+namespace SDLImGuiGL
 {
 	public sealed class GLShader : IDisposable
 	{

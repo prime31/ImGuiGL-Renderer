@@ -1,6 +1,6 @@
 ﻿using System;
 using ImGuiNET;
-using SDL.ImGuiRenderer;
+using SDLImGuiGL;
 using static SDL2.SDL;
 
 namespace Example

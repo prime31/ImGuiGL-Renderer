@@ -2,9 +2,9 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
-using static SDL.ImGuiRenderer.GL;
+using static SDLImGuiGL.GL;
 
-namespace SDL.ImGuiRenderer
+namespace SDLImGuiGL
 {
 	public partial class ImGuiGLRenderer : IDisposable
 	{

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Numerics;
-using static SDL.ImGuiRenderer.GL;
+using static SDLImGuiGL.GL;
 
-namespace SDL.ImGuiRenderer
+namespace SDLImGuiGL
 {
 	public enum ParamType
 	{

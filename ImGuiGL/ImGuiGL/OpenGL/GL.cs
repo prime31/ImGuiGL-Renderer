@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using static SDL2.SDL;
 
-namespace SDL.ImGuiRenderer
+namespace SDLImGuiGL
 {
 	public static partial class GL
 	{
