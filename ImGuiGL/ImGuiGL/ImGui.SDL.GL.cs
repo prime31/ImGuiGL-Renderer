@@ -6,13 +6,13 @@ using static SDL.ImGuiRenderer.GL;
 
 namespace SDL.ImGuiRenderer
 {
-	public partial class ImGuiDemoRenderer : IDisposable
+	public partial class ImGuiGLRenderer : IDisposable
 	{
 		readonly IntPtr _window;
 		GLShaderProgram _shader;
 		uint _vboHandle, _elementsHandle, _vertexArrayObject, _fontTextureId;
 
-		public ImGuiDemoRenderer(IntPtr window)
+		public ImGuiGLRenderer(IntPtr window)
 		{
 			_window = window;
 
@@ -35,7 +35,7 @@ namespace SDL.ImGuiRenderer
 			fonts.AddFontDefault();
 			fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int _);
 
-			_fontTextureId = SDLGL.LoadTexture((IntPtr)pixelData, width, height);
+			_fontTextureId = ImGuiGL.LoadTexture((IntPtr)pixelData, width, height);
 
 			fonts.TexID = (IntPtr)_fontTextureId;
 			fonts.ClearTexData();

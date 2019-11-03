@@ -5,7 +5,7 @@ using static SDL2.SDL;
 
 namespace SDL.ImGuiRenderer
 {
-	public partial class ImGuiDemoRenderer
+	public partial class ImGuiGLRenderer
 	{
 		float _time;
 		readonly bool[] _mousePressed = {false, false, false};

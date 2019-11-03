@@ -7,7 +7,7 @@ namespace Example
 {
 	internal class MainClass
 	{
-		static ImGuiDemoRenderer _renderer;
+		static ImGuiGLRenderer _renderer;
 		static bool _quit;
 		static IntPtr _window;
 		static IntPtr _glContext;
@@ -15,8 +15,8 @@ namespace Example
 		public static void Main(string[] args)
 		{
 			// create a window, GL context and our ImGui renderer
-			(_window, _glContext) = SDLGL.CreateWindowAndGLContext("SDL GL ImGui Renderer", 800, 600);
-			_renderer = new ImGuiDemoRenderer(_window);
+			(_window, _glContext) = ImGuiGL.CreateWindowAndGLContext("SDL GL ImGui Renderer", 800, 600);
+			_renderer = new ImGuiGLRenderer(_window);
 
 			while (!_quit)
 			{

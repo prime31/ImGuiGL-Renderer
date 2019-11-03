@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>SDL.ImGui</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

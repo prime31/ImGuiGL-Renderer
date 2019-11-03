@@ -5,7 +5,7 @@ using static SDL.ImGuiRenderer.GL;
 
 namespace SDL.ImGuiRenderer
 {
-	public static class SDLGL
+	public static class ImGuiGL
 	{
 		public static (IntPtr, IntPtr) CreateWindowAndGLContext(string title, int width, int height, bool fullscreen = false, bool highDpi = false)
 		{
