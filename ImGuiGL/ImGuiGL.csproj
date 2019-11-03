@@ -3,15 +3,11 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <RootNamespace>SDL.ImGui</RootNamespace>
+        <RootNamespace>SDLImGuiGL</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="ImGui.NET" Version="1.72.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\SDL2\SDL2.csproj" />
     </ItemGroup>
 
 </Project>

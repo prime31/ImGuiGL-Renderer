@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImGuiGL", "ImGuiGL\ImGuiGL.csproj", "{7116C065-475D-48AA-AB33-04B64E46A3DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2", "SDL2\SDL2.csproj", "{8A04F3FB-E207-4BDE-B09D-36D483BE3922}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,14 +31,6 @@ Global
 		{7116C065-475D-48AA-AB33-04B64E46A3DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7116C065-475D-48AA-AB33-04B64E46A3DF}.Release|x86.ActiveCfg = Release|Any CPU
 		{7116C065-475D-48AA-AB33-04B64E46A3DF}.Release|x86.Build.0 = Release|Any CPU
-		{8A04F3FB-E207-4BDE-B09D-36D483BE3922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A04F3FB-E207-4BDE-B09D-36D483BE3922}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A04F3FB-E207-4BDE-B09D-36D483BE3922}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8A04F3FB-E207-4BDE-B09D-36D483BE3922}.Debug|x86.Build.0 = Debug|Any CPU
-		{8A04F3FB-E207-4BDE-B09D-36D483BE3922}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A04F3FB-E207-4BDE-B09D-36D483BE3922}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A04F3FB-E207-4BDE-B09D-36D483BE3922}.Release|x86.ActiveCfg = Release|Any CPU
-		{8A04F3FB-E207-4BDE-B09D-36D483BE3922}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

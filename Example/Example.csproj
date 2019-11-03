@@ -4,26 +4,20 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_0;USE_NUMERICS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType></DebugType>
-    <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP3_0;USE_NUMERICS</DefineConstants>
+    <DefineConstants>TRACE;RELEASE;NETCOREAPP;NETCOREAPP3_0</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <None Update="Assets\crate.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.72.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImGuiGL\ImGuiGL.csproj" />
-    <ProjectReference Include="..\SDL2\SDL2.csproj" />
   </ItemGroup>
 </Project>
