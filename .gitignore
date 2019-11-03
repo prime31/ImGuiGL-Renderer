@@ -5,3 +5,5 @@ Example/obj
 SDL.ImGui/obj
 SDL.ImGui/bin
 .idea/.idea.SDL.ImGui.Renderer
+SDL2/bin
+SDL2/obj

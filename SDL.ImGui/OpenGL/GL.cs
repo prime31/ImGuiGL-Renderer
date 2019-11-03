@@ -40,6 +40,10 @@ namespace SDL.ImGuiRenderer
 		public static GenBuffers glGenBuffers = _<GenBuffers>();
 
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		public delegate void DeleteBuffers(Int32 n, UInt32[] buffers);
+		public static DeleteBuffers glDeleteBuffers = _<DeleteBuffers>();
+
+		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		public delegate void Viewport(int x, int y, int width, int height);
 		public static Viewport glViewport = _<Viewport>();
 

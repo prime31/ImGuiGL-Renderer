@@ -20,6 +20,13 @@ namespace SDL.ImGuiRenderer
 			return uint1[0];
 		}
 
+		public static void DeleteBuffer(uint buffer)
+		{
+			uint1[0] = 0;
+			glDeleteBuffers(1, uint1);
+			uint1[0] = 0;
+		}
+
 		public static string GetShaderInfoLog(UInt32 shader)
 		{
 			glGetShaderiv(shader, ShaderParameter.InfoLogLength, int1);

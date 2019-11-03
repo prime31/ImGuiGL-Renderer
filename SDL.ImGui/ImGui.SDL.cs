@@ -5,7 +5,7 @@ using static SDL2.SDL;
 
 namespace SDL.ImGuiRenderer
 {
-	public partial class ImGuiDemo
+	public partial class ImGuiDemoRenderer
 	{
 		float _time;
 		readonly bool[] _mousePressed = {false, false, false};
@@ -60,7 +60,7 @@ namespace SDL.ImGuiRenderer
 			ImGui_ImplSDL2_UpdateMousePosAndButtons();
 		}
 
-		public unsafe void ImGui_ImplSDL2_ProcessEvent(SDL_Event evt)
+		public unsafe void ProcessEvent(SDL_Event evt)
 		{
 			var io = ImGui.GetIO();
 			switch (evt.type)

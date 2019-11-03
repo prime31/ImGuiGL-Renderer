@@ -6,14 +6,14 @@ using static SDL.ImGuiRenderer.GL;
 
 namespace SDL.ImGuiRenderer
 {
-	public partial class ImGuiDemo
+	public partial class ImGuiDemoRenderer : IDisposable
 	{
-		int width = 800, height = 600;
 		IntPtr _window;
 		GLShaderProgram _shader;
-		uint _vboHandle, _elementsHandle;
+		uint _vboHandle, _elementsHandle, _vertexArrayObject;
+		GLTexture _fontTex;
 
-		public ImGuiDemo(IntPtr window)
+		public ImGuiDemoRenderer(IntPtr window)
 		{
 			_window = window;
 
@@ -21,12 +21,12 @@ namespace SDL.ImGuiRenderer
 			_shader = new GLShaderProgram(VertexShader, FragmentShader);
 
 			ImGui.SetCurrentContext(ImGui.CreateContext());
-			ImGui.GetIO().DisplaySize = new Vector2(width, height);
 			RebuildFontAtlas();
 			ImGui_ImplSDL2_Init();
 
 			_vboHandle = GenBuffer();
 			_elementsHandle = GenBuffer();
+			_vertexArrayObject = GenVertexArray();
 		}
 
 		unsafe void RebuildFontAtlas()
@@ -36,30 +36,35 @@ namespace SDL.ImGuiRenderer
 			fonts.AddFontDefault();
 			fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int _);
 
-			var tex = new GLTexture((IntPtr)pixelData, width, height, PixelFormat.Rgba, PixelInternalFormat.Rgba);
+			_fontTex = new GLTexture((IntPtr)pixelData, width, height, PixelFormat.Rgba, PixelInternalFormat.Rgba);
 
-			fonts.TexID = (IntPtr)tex.TextureID;
+			fonts.TexID = (IntPtr)_fontTex.TextureID;
 			fonts.ClearTexData();
 		}
 
-		public void Render()
+		public void NewFrame()
 		{
 			ImGui_ImplSDL2_NewFrame();
 			ImGui.NewFrame();
-			ImGui.ShowDemoWindow();
+		}
+
+		float wtf = 0.45f;
+		public void Render()
+		{
 			ImGui.Render();
+			wtf += 0.005f;
+			if (wtf > 1) wtf = 0;
+			Console.WriteLine($"clear: {wtf}");
 
 			var io = ImGui.GetIO();
 			glViewport(0, 0, (int)io.DisplaySize.X, (int)io.DisplaySize.Y);
-			glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
-			glClear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			glClearColor(wtf, 0.55f, 0.60f, 1.00f);
+			glClear(ClearBufferMask.ColorBufferBit);
 
-			ImGui_ImplOpenGL3_RenderDrawData();
-
-			glDisable(EnableCap.ScissorTest);
+			RenderDrawData();
 		}
 
-		void ImGui_ImplOpenGL3_SetupRenderState(ImDrawDataPtr draw_data, int fb_width, int fb_height, uint vertex_array_object)
+		void SetupRenderState(ImDrawDataPtr drawData, int fbWidth, int fbHeight)
 		{
 			glEnable(EnableCap.Blend);
 			glBlendEquation(BlendEquationMode.FuncAdd);
@@ -70,16 +75,16 @@ namespace SDL.ImGuiRenderer
 
 			glUseProgram(_shader.ProgramID);
 
-			var L = draw_data.DisplayPos.X;
-			var R = draw_data.DisplayPos.X + draw_data.DisplaySize.X;
-			var T = draw_data.DisplayPos.Y;
-			var B = draw_data.DisplayPos.Y + draw_data.DisplaySize.Y;
+			var left = drawData.DisplayPos.X;
+			var right = drawData.DisplayPos.X + drawData.DisplaySize.X;
+			var top = drawData.DisplayPos.Y;
+			var bottom = drawData.DisplayPos.Y + drawData.DisplaySize.Y;
 
 			_shader["Texture"].SetValue(0);
-			_shader["ProjMtx"].SetValue(Matrix4x4.CreateOrthographicOffCenter(L, R, B, T, -1, 1));
+			_shader["ProjMtx"].SetValue(Matrix4x4.CreateOrthographicOffCenter(left, right, bottom, top, -1, 1));
 			glBindSampler(0, 0);
 
-			glBindVertexArray(vertex_array_object);
+			glBindVertexArray(_vertexArrayObject);
 
 			// Bind vertex/index buffers and setup attributes for ImDrawVert
 			glBindBuffer(BufferTarget.ArrayBuffer, _vboHandle);
@@ -95,23 +100,22 @@ namespace SDL.ImGuiRenderer
 			VertexAttribPointer(_shader["Color"].Location, 4, VertexAttribPointerType.UnsignedByte, true, drawVertSize, Marshal.OffsetOf<ImDrawVert>("col"));
 		}
 
-		unsafe void ImGui_ImplOpenGL3_RenderDrawData()
+		unsafe void RenderDrawData()
 		{
-			var draw_data = ImGui.GetDrawData();
+			var drawData = ImGui.GetDrawData();
 
 			// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
-			var fb_width = (int)(draw_data.DisplaySize.X * draw_data.FramebufferScale.X);
-			var fb_height = (int)(draw_data.DisplaySize.Y * draw_data.FramebufferScale.Y);
-			if (fb_width <= 0 || fb_height <= 0)
+			var fbWidth = (int)(drawData.DisplaySize.X * drawData.FramebufferScale.X);
+			var fbHeight = (int)(drawData.DisplaySize.Y * drawData.FramebufferScale.Y);
+			if (fbWidth <= 0 || fbHeight <= 0)
 				return;
 
-			var vertex_array_object = GenVertexArray();
-			ImGui_ImplOpenGL3_SetupRenderState(draw_data, fb_width, fb_height, vertex_array_object);
+			SetupRenderState(drawData, fbWidth, fbHeight);
 
-			var clip_off = draw_data.DisplayPos;
-			var clip_scale = draw_data.FramebufferScale;
+			var clipOffset = drawData.DisplayPos;
+			var clipScale = drawData.FramebufferScale;
 
-			draw_data.ScaleClipRects(clip_scale);
+			drawData.ScaleClipRects(clipScale);
 
 			var lastTexId = ImGui.GetIO().Fonts.TexID;
 			glBindTexture(TextureTarget.Texture2D, (uint)lastTexId);
@@ -119,17 +123,17 @@ namespace SDL.ImGuiRenderer
 			var drawVertSize = Marshal.SizeOf<ImDrawVert>();
 			var drawIdxSize = sizeof(ushort);
 
-			for (var n = 0; n < draw_data.CmdListsCount; n++)
+			for (var n = 0; n < drawData.CmdListsCount; n++)
 			{
-				var cmd_list = draw_data.CmdListsRange[n];
+				var cmdList = drawData.CmdListsRange[n];
 
 				// Upload vertex/index buffers
-				glBufferData(BufferTarget.ArrayBuffer, (IntPtr)(cmd_list.VtxBuffer.Size * drawVertSize), cmd_list.VtxBuffer.Data, BufferUsageHint.StreamDraw);
-				glBufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(cmd_list.IdxBuffer.Size * drawIdxSize), cmd_list.IdxBuffer.Data, BufferUsageHint.StreamDraw);
+				glBufferData(BufferTarget.ArrayBuffer, (IntPtr)(cmdList.VtxBuffer.Size * drawVertSize), cmdList.VtxBuffer.Data, BufferUsageHint.StreamDraw);
+				glBufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(cmdList.IdxBuffer.Size * drawIdxSize), cmdList.IdxBuffer.Data, BufferUsageHint.StreamDraw);
 
-				for (var cmd_i = 0; cmd_i < cmd_list.CmdBuffer.Size; cmd_i++)
+				for (var cmd_i = 0; cmd_i < cmdList.CmdBuffer.Size; cmd_i++)
 				{
-					var pcmd = cmd_list.CmdBuffer[cmd_i];
+					var pcmd = cmdList.CmdBuffer[cmd_i];
 					if (pcmd.UserCallback != IntPtr.Zero)
 					{
 						Console.WriteLine("UserCallback not implemented");
@@ -140,12 +144,12 @@ namespace SDL.ImGuiRenderer
 						// Project scissor/clipping rectangles into framebuffer space
 						var clip_rect = pcmd.ClipRect;
 
-						clip_rect.X = pcmd.ClipRect.X - clip_off.X;
-						clip_rect.Y = pcmd.ClipRect.Y - clip_off.Y;
-						clip_rect.Z = pcmd.ClipRect.Z - clip_off.X;
-						clip_rect.W = pcmd.ClipRect.W - clip_off.Y;
+						clip_rect.X = pcmd.ClipRect.X - clipOffset.X;
+						clip_rect.Y = pcmd.ClipRect.Y - clipOffset.Y;
+						clip_rect.Z = pcmd.ClipRect.Z - clipOffset.X;
+						clip_rect.W = pcmd.ClipRect.W - clipOffset.Y;
 
-						glScissor((int)clip_rect.X, (int)(fb_height - clip_rect.W), (int)(clip_rect.Z - clip_rect.X), (int)(clip_rect.W - clip_rect.Y));
+						glScissor((int)clip_rect.X, (int)(fbHeight - clip_rect.W), (int)(clip_rect.Z - clip_rect.X), (int)(clip_rect.W - clip_rect.Y));
 
 						// Bind texture, Draw
 						if (pcmd.TextureId != IntPtr.Zero)
@@ -161,8 +165,19 @@ namespace SDL.ImGuiRenderer
 					}
 				}
 			}
+		}
 
-			DeleteVertexArray(vertex_array_object);
+		public void Dispose()
+		{
+			if (_shader != null)
+			{
+				_shader.Dispose();
+				_shader = null;
+				DeleteBuffer(_vboHandle);
+				DeleteBuffer(_elementsHandle);
+				DeleteVertexArray(_vertexArrayObject);
+				_fontTex.Dispose();
+			}
 		}
 
 		public static string VertexShader = @"

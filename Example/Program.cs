@@ -1,4 +1,5 @@
-﻿using OpenGL.Platform;
+﻿using System;
+using ImGuiNET;
 using SDL.ImGuiRenderer;
 using static SDL2.SDL;
 
@@ -6,62 +7,56 @@ namespace Example
 {
 	internal class MainClass
 	{
-		static ImGuiDemo demo;
-		static bool quit;
+		static ImGuiDemoRenderer _renderer;
+		static bool _quit;
+		static IntPtr _window;
+		static IntPtr _glContext;
 
 		public static void Main(string[] args)
 		{
-			Window.CreateWindow("Poop", 800, 600);
-			Window.OnEvent += HandleEvent;
-			demo = new ImGuiDemo(Window.window);
+			// create a window, GL context and our ImGui renderer
+			(_window, _glContext) = SDLGL.CreateWindowAndGLContext("SDL GL ImGui Renderer", 800, 600);
+			_renderer = new ImGuiDemoRenderer(_window);
 
-			// var flags = SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
-			// SDL_CreateWindow("fucker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 800, flags);
-
-			while (!quit)
+			while (!_quit)
 			{
-				Window.HandleEvents();
-
-				if (demo != null)
-					demo.Render();
-				else
-					Render();
-				SDL_GL_SwapWindow(Window.window);
-			}
-
-			SDL_Quit();
-		}
-
-		static void Render()
-		{
-			GL.glViewport(0, 0, 800, 600);
-			GL.glClearColor(0.4f, 0.4f, 0.4f, 1);
-			GL.glClear(GL.ClearBufferMask.ColorBufferBit | GL.ClearBufferMask.DepthBufferBit);
-		}
-
-		static void HandleEvent(SDL_Event e)
-		{
-			demo.ImGui_ImplSDL2_ProcessEvent(e);
-
-			switch (e.type)
-			{
-				case SDL_EventType.SDL_QUIT:
+				// send events to our window
+				while (SDL_PollEvent(out var e) != 0)
+				{
+					_renderer.ProcessEvent(e);
+					switch (e.type)
 					{
-						quit = true;
-						break;
-					}
-				case SDL_EventType.SDL_KEYDOWN:
-					{
-						switch (e.key.keysym.sym)
+						case SDL_EventType.SDL_QUIT:
 						{
-							case SDL_Keycode.SDLK_ESCAPE:
-							case SDL_Keycode.SDLK_q:
-								quit = true;
-								break;
+							_quit = true;
+							break;
 						}
-						break;
+						case SDL_EventType.SDL_KEYDOWN:
+						{
+							switch (e.key.keysym.sym)
+							{
+								case SDL_Keycode.SDLK_ESCAPE:
+								case SDL_Keycode.SDLK_q:
+									_quit = true;
+									break;
+							}
+
+							break;
+						}
 					}
+				}
+
+				_renderer.NewFrame();
+				ImGui.ShowDemoWindow();
+				SDL_GL_MakeCurrent(_window, _glContext);
+				_renderer.Render();
+
+				SDL_GL_SwapWindow(_window);
 			}
+
+			SDL_GL_DeleteContext(_glContext);
+			SDL_DestroyWindow(_window);
+			SDL_Quit();
 		}
 	}
 }
