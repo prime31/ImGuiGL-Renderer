@@ -4,7 +4,7 @@
 ImGuiGL# is a C# OpenGL loader and Dear ImGui renderer. It uses [SDL2-CS](https://github.com/flibitijibibo/SDL2-CS) as a base and has it's own OpenGL function loader that loads only the methods required to render Dear ImGui. Under the hood, it uses the excellent [ImGui.Net](https://github.com/mellinoe/ImGui.NET) to access Dear ImGui from C#.
 
 
-### Getting Started
+## Getting Started
 
 It is assumed that you are using SDL2 in your project.
 
@@ -33,8 +33,12 @@ SDL_GL_MakeCurrent(window, glContext);
 renderer.Render();
 
 SDL_GL_SwapWindow(window);
-
 ```
+
+## Repo Structure
+
+- **Example**: contains a simple example project that displays the ImGui demo in an SDL window and shows the basic structure on how you can setup your own game loop. This demo expects that you have SDL2 already installed on your computer and does not provide any SDL2 binaries.
+- **ImGuiGL**: contains the `ImGuiGL` csproj file and `ImGuiGL folder. The `ImGuiGL` folder is what you will want to copy into your project.
 
 ## License
 Whatever.
