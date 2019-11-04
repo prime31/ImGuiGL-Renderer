@@ -21,7 +21,11 @@ var renderer = new ImGuiGLRenderer(window);
 ...
 
 // in your main game loop, send all the SDL events to the ImGuiGLRenderer. Alternatively, you can manually set the ImGui.IO data
-renderer.ProcessEvent(sdlEvent);
+while (SDL_PollEvent(out var sdlEvent) != 0)
+{
+	renderer.ProcessEvent(sdlEvent);
+	// process your normal input
+}
 
 // at the beginning of your frame, let the ImGuiGLRenderer know you are starting a frame
 renderer.NewFrame();
