@@ -16,7 +16,7 @@ namespace Example
 		{
 			// create a window, GL context and our ImGui renderer
 			(_window, _glContext) = ImGuiGL.CreateWindowAndGLContext("SDL GL ImGui Renderer", 800, 600);
-			_renderer = new ImGuiGLRenderer(_window);
+			_renderer = new ImGuiGLRenderer(_window, _glContext);
 
 			while (!_quit)
 			{
@@ -48,7 +48,6 @@ namespace Example
 
 				_renderer.NewFrame();
 				ImGui.ShowDemoWindow();
-				SDL_GL_MakeCurrent(_window, _glContext);
 				_renderer.Render();
 
 				SDL_GL_SwapWindow(_window);

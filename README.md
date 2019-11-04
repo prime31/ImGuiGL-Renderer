@@ -16,11 +16,12 @@ It is assumed that you are using SDL2 in your project.
 var (window, glContext) = ImGuiGL.CreateWindowAndGLContext("SDL GL ImGui Renderer", 800, 600);
 
 // create an ImGuiGLRenderer which will handle rendering and input
-var renderer = new ImGuiGLRenderer(window);
+var renderer = new ImGuiGLRenderer(window, glContext);
 
 ...
 
-// in your main game loop, send all the SDL events to the ImGuiGLRenderer. Alternatively, you can manually set the ImGui.IO data
+// in your main game loop, send all the SDL events to the ImGuiGLRenderer.
+// Alternatively, you can manually set the ImGui.IO data
 renderer.ProcessEvent(sdlEvent);
 
 // at the beginning of your frame, let the ImGuiGLRenderer know you are starting a frame
@@ -28,8 +29,7 @@ renderer.NewFrame();
 
 // at this point, run your normal game loop and do any ImGui calls that you need
 
-// finally, make the glContext active (only required when you are using multiple SDL windows), perform your rendering then render the ImGui data
-SDL_GL_MakeCurrent(window, glContext);
+// finally, perform your games rendering then render the ImGui data
 renderer.Render();
 
 SDL_GL_SwapWindow(window);

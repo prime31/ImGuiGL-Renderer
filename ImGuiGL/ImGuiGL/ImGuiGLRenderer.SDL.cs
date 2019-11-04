@@ -136,5 +136,7 @@ namespace SDLImGuiGL
 			var any_mouse_button_down = ImGui.IsAnyMouseDown();
 			SDL_CaptureMouse(any_mouse_button_down ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
 		}
+
+		void PrepareGLContext() => SDL_GL_MakeCurrent(_window, _glContext);
 	}
 }

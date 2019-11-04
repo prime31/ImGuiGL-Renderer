@@ -9,12 +9,14 @@ namespace SDLImGuiGL
 	public partial class ImGuiGLRenderer : IDisposable
 	{
 		readonly IntPtr _window;
+		readonly IntPtr _glContext;
 		GLShaderProgram _shader;
 		uint _vboHandle, _elementsHandle, _vertexArrayObject, _fontTextureId;
 
-		public ImGuiGLRenderer(IntPtr window)
+		public ImGuiGLRenderer(IntPtr window, IntPtr glContext)
 		{
 			_window = window;
+			_glContext = glContext;
 
 			// compile the shader program
 			_shader = new GLShaderProgram(VertexShader, FragmentShader);
@@ -43,6 +45,7 @@ namespace SDLImGuiGL
 
 		public void Render()
 		{
+			PrepareGLContext();
 			ImGui.Render();
 
 			var io = ImGui.GetIO();
