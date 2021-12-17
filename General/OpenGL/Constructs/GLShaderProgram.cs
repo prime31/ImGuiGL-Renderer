@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
-using static SDLImGuiGL.GL;
+using static OpenGL.GL;
 
-namespace SDLImGuiGL
+namespace OpenGL
 {
 	public sealed class GLShaderProgram : IDisposable
 	{

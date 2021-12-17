@@ -1,9 +1,9 @@
 using System;
 using static SDL2.SDL;
-using static SDLImGuiGL.GL;
+using static OpenGL.GL;
 
 
-namespace SDLImGuiGL
+namespace ImGuiGeneral
 {
 	public static class ImGuiGL
 	{
@@ -24,10 +24,8 @@ namespace SDLImGuiGL
 
 			// create the window which should be able to have a valid OpenGL context and is resizable
 			var flags = SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
-			if (fullscreen)
-				flags |= SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
-			if (highDpi)
-				flags |= SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI;
+			if (fullscreen) flags |= SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
+			if (highDpi) flags |= SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI;
 
 			var window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 			var glContext = CreateGLContext(window);
@@ -45,26 +43,22 @@ namespace SDLImGuiGL
 
 			// initialize the screen to black as soon as possible
 			glClearColor(0f, 0f, 0f, 1f);
-			glClear(GL.ClearBufferMask.ColorBufferBit);
+			glClear(ClearBufferMask.ColorBufferBit);
 			SDL_GL_SwapWindow(window);
 
-			Console.WriteLine($"GL Version: {glGetString(GL.StringName.Version)}");
-
+			Console.WriteLine($"GL Version: {glGetString(StringName.Version)}");
 			return glContext;
 		}
 
-		public static uint LoadTexture(IntPtr pixelData, int width, int height, GL.PixelFormat format = GL.PixelFormat.Rgba, GL.PixelInternalFormat internalFormat = GL.PixelInternalFormat.Rgba)
+		public static uint LoadTexture(IntPtr pixelData, int width, int height, PixelFormat format = PixelFormat.Rgba, PixelInternalFormat internalFormat = PixelInternalFormat.Rgba)
 		{
 			var textureId = GenTexture();
-
-			glPixelStorei(GL.PixelStoreParameter.UnpackAlignment, 1);
-			glBindTexture(GL.TextureTarget.Texture2D, textureId);
-
-			glTexImage2D(GL.TextureTarget.Texture2D, 0, internalFormat, width, height, 0, format, GL.PixelType.UnsignedByte, pixelData);
-			glTexParameteri(GL.TextureTarget.Texture2D, GL.TextureParameterName.TextureMagFilter, GL.TextureParameter.Linear);
-			glTexParameteri(GL.TextureTarget.Texture2D, GL.TextureParameterName.TextureMinFilter, GL.TextureParameter.Linear);
-
-			glBindTexture(GL.TextureTarget.Texture2D, 0);
+			glPixelStorei(PixelStoreParameter.UnpackAlignment, 1);
+			glBindTexture(TextureTarget.Texture2D, textureId);
+			glTexImage2D(TextureTarget.Texture2D, 0, internalFormat, width, height, 0, format,PixelType.UnsignedByte, pixelData);
+			glTexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
+			glTexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureParameter.Linear);
+			glBindTexture(TextureTarget.Texture2D, 0);
 			return textureId;
 		}
 	}

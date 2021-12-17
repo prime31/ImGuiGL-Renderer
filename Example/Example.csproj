@@ -1,8 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	<DebugSymbols>false</DebugSymbols>
+    <DebugType>None</DebugType>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <BaseOutputPath>../Build</BaseOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -18,6 +24,6 @@
     <PackageReference Include="ImGui.NET" Version="1.72.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ImGuiGL\ImGuiGL.csproj" />
+    <ProjectReference Include="..\General\General.csproj" />
   </ItemGroup>
 </Project>
