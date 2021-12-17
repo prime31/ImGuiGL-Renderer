@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text;
 
-namespace SDLImGuiGL
+namespace OpenGL
 {
 	/// <summary>
 	/// the methods here are just convenience wrappers for calling the raw gl* method

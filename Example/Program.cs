@@ -1,7 +1,7 @@
 ﻿using System;
 using ImGuiNET;
-using SDLImGuiGL;
 using static SDL2.SDL;
+using ImGuiGeneral;
 
 namespace Example
 {
@@ -15,12 +15,12 @@ namespace Example
 		public static void Main(string[] args)
 		{
 			// create a window, GL context and our ImGui renderer
-			(_window, _glContext) = ImGuiGL.CreateWindowAndGLContext("SDL GL ImGui Renderer", 800, 600);
+			// this is fast solution for create SDL_Window and SDL_Render
+			(_window, _glContext) = ImGuiGL.CreateWindowAndGLContext("SDL Window (OpenGL)", 800, 600);
 			_renderer = new ImGuiGLRenderer(_window, _glContext);
 
 			while (!_quit)
 			{
-				// send events to our window
 				while (SDL_PollEvent(out var e) != 0)
 				{
 					_renderer.ProcessEvent(e);
@@ -49,7 +49,6 @@ namespace Example
 				_renderer.NewFrame();
 				ImGui.ShowDemoWindow();
 				_renderer.Render();
-
 				SDL_GL_SwapWindow(_window);
 			}
 

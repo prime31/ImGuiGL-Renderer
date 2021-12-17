@@ -2,15 +2,15 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
-using static SDLImGuiGL.GL;
+using static OpenGL.GL;
 
-namespace SDLImGuiGL
+namespace ImGuiGeneral
 {
 	public partial class ImGuiGLRenderer : IDisposable
 	{
 		readonly IntPtr _window;
 		readonly IntPtr _glContext;
-		GLShaderProgram _shader;
+        OpenGL.GLShaderProgram _shader;
 		uint _vboHandle, _elementsHandle, _vertexArrayObject, _fontTextureId;
 
 		public ImGuiGLRenderer(IntPtr window, IntPtr glContext)
@@ -19,7 +19,7 @@ namespace SDLImGuiGL
 			_glContext = glContext;
 
 			// compile the shader program
-			_shader = new GLShaderProgram(VertexShader, FragmentShader);
+			_shader = new OpenGL.GLShaderProgram(VertexShader, FragmentShader);
 
 			ImGui.SetCurrentContext(ImGui.CreateContext());
 			RebuildFontAtlas();
@@ -174,37 +174,36 @@ namespace SDLImGuiGL
 			}
 		}
 
-
 		public static string VertexShader = @"
-#version 330
-
-precision mediump float;
-layout (location = 0) in vec2 Position;
-layout (location = 1) in vec2 UV;
-layout (location = 2) in vec4 Color;
-uniform mat4 ProjMtx;
-out vec2 Frag_UV;
-out vec4 Frag_Color;
-void main()
-{
-    Frag_UV = UV;
-    Frag_Color = Color;
-    gl_Position = ProjMtx * vec4(Position.xy, 0, 1);
-}";
+			#version 330
+			
+			precision mediump float;
+			layout (location = 0) in vec2 Position;
+			layout (location = 1) in vec2 UV;
+			layout (location = 2) in vec4 Color;
+			uniform mat4 ProjMtx;
+			out vec2 Frag_UV;
+			out vec4 Frag_Color;
+			void main()
+			{
+			    Frag_UV = UV;
+			    Frag_Color = Color;
+			    gl_Position = ProjMtx * vec4(Position.xy, 0, 1);
+			}";
 
 		public static string FragmentShader = @"
-#version 330
-
-precision mediump float;
-uniform sampler2D Texture;
-in vec2 Frag_UV;
-in vec4 Frag_Color;
-layout (location = 0) out vec4 Out_Color;
-
-void main()
-{
-    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
-}";
+			#version 330
+			
+			precision mediump float;
+			uniform sampler2D Texture;
+			in vec2 Frag_UV;
+			in vec4 Frag_Color;
+			layout (location = 0) out vec4 Out_Color;
+			
+			void main()
+			{
+			    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
+			}";
 
 	}
 }
