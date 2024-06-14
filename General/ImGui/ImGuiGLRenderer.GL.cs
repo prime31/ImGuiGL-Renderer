@@ -23,7 +23,6 @@ namespace ImGuiGeneral
 
 			ImGui.SetCurrentContext(ImGui.CreateContext());
 			RebuildFontAtlas();
-			InitKeyMap();
 
 			_vboHandle = GenBuffer();
 			_elementsHandle = GenBuffer();
@@ -123,7 +122,7 @@ namespace ImGuiGeneral
 
 			for (var n = 0; n < drawData.CmdListsCount; n++)
 			{
-				var cmdList = drawData.CmdListsRange[n];
+				var cmdList = drawData.CmdLists[n];
 
 				// Upload vertex/index buffers
 				glBufferData(BufferTarget.ArrayBuffer, (IntPtr)(cmdList.VtxBuffer.Size * drawVertSize), cmdList.VtxBuffer.Data, BufferUsageHint.StreamDraw);

@@ -5,7 +5,7 @@
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 		<DebugSymbols>false</DebugSymbols>
 		<DebugType>None</DebugType>
-		<TargetFramework>netcoreapp3.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RootNamespace>General</RootNamespace>
         <Platforms>AnyCPU;x64</Platforms>
@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ImGui.NET" Version="1.72.0" />
+      <PackageReference Include="ImGui.NET" Version="1.90.8.1" />
     </ItemGroup>
 
 </Project>
