@@ -1,24 +1,20 @@
 ﻿using System;
-using static SDLImGuiGL.GL;
+using static OpenGL.GL;
 
-namespace SDLImGuiGL
+namespace OpenGL
 {
 	public sealed class GLShader : IDisposable
 	{
-		/// <summary>
-		/// Specifies the OpenGL ShaderID.
-		/// </summary>
+		// Specifies the OpenGL ShaderID.
 		public uint ShaderID { get; private set; }
 
-		/// <summary>
-		/// Specifies the type of shader.
-		/// </summary>
+		// Specifies the type of shader.
 		public ShaderType ShaderType { get; private set; }
 
-		/// <summary>
-		/// Returns Gl.GetShaderInfoLog(ShaderID), which contains any compilation errors.
-		/// </summary>
+		// Returns Gl.GetShaderInfoLog(ShaderID), which contains any compilation errors.
 		public string ShaderLog => GetShaderInfoLog(ShaderID);
+
+		~GLShader() => Dispose(false);
 
 		public GLShader(string source, ShaderType type)
 		{
@@ -28,11 +24,11 @@ namespace SDLImGuiGL
 			ShaderSource(ShaderID, source);
 			glCompileShader(ShaderID);
 
-			if (!GetShaderCompileStatus(ShaderID))
+            if (!GetShaderCompileStatus(ShaderID))
+            {
 				throw new Exception(ShaderLog);
-		}
-
-		~GLShader() => Dispose(false);
+			}
+        }
 
 		public void Dispose()
 		{

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace SDLImGuiGL
+namespace OpenGL
 {
 	public static class Vector4Ext
 	{

@@ -1,12 +1,7 @@
 .vs
+.idea
+Build/
 Example/bin
 Example/obj
-.idea/.idea.OpenGL
-SDL.ImGui/obj
-SDL.ImGui/bin
-.idea/.idea.SDL.ImGui.Renderer
-SDL2/bin
-SDL2/obj
-ImGuiGL/bin
-ImGuiGL/obj
-.idea
+General/bin
+General/obj

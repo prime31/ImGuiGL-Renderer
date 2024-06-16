@@ -2,15 +2,15 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using ImGuiNET;
-using static SDLImGuiGL.GL;
+using static OpenGL.GL;
 
-namespace SDLImGuiGL
+namespace ImGuiGeneral
 {
 	public partial class ImGuiGLRenderer : IDisposable
 	{
 		readonly IntPtr _window;
 		readonly IntPtr _glContext;
-		GLShaderProgram _shader;
+        OpenGL.GLShaderProgram _shader;
 		uint _vboHandle, _elementsHandle, _vertexArrayObject, _fontTextureId;
 
 		public ImGuiGLRenderer(IntPtr window, IntPtr glContext)
@@ -19,11 +19,10 @@ namespace SDLImGuiGL
 			_glContext = glContext;
 
 			// compile the shader program
-			_shader = new GLShaderProgram(VertexShader, FragmentShader);
+			_shader = new OpenGL.GLShaderProgram(VertexShader, FragmentShader);
 
 			ImGui.SetCurrentContext(ImGui.CreateContext());
 			RebuildFontAtlas();
-			InitKeyMap();
 
 			_vboHandle = GenBuffer();
 			_elementsHandle = GenBuffer();
@@ -50,12 +49,16 @@ namespace SDLImGuiGL
 
 			var io = ImGui.GetIO();
 			glViewport(0, 0, (int)io.DisplaySize.X, (int)io.DisplaySize.Y);
-			glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
 			glClear(ClearBufferMask.ColorBufferBit);
 
 			RenderDrawData();
 
 			glDisable(EnableCap.ScissorTest);
+		}
+
+		public void ClearColor(float r, float g, float b, float a)
+        {
+			glClearColor(r, g, b, a);
 		}
 
 		void SetupRenderState(ImDrawDataPtr drawData, int fbWidth, int fbHeight)
@@ -119,7 +122,7 @@ namespace SDLImGuiGL
 
 			for (var n = 0; n < drawData.CmdListsCount; n++)
 			{
-				var cmdList = drawData.CmdListsRange[n];
+				var cmdList = drawData.CmdLists[n];
 
 				// Upload vertex/index buffers
 				glBufferData(BufferTarget.ArrayBuffer, (IntPtr)(cmdList.VtxBuffer.Size * drawVertSize), cmdList.VtxBuffer.Data, BufferUsageHint.StreamDraw);
@@ -174,37 +177,36 @@ namespace SDLImGuiGL
 			}
 		}
 
-
 		public static string VertexShader = @"
-#version 330
-
-precision mediump float;
-layout (location = 0) in vec2 Position;
-layout (location = 1) in vec2 UV;
-layout (location = 2) in vec4 Color;
-uniform mat4 ProjMtx;
-out vec2 Frag_UV;
-out vec4 Frag_Color;
-void main()
-{
-    Frag_UV = UV;
-    Frag_Color = Color;
-    gl_Position = ProjMtx * vec4(Position.xy, 0, 1);
-}";
+			#version 330
+			
+			precision mediump float;
+			layout (location = 0) in vec2 Position;
+			layout (location = 1) in vec2 UV;
+			layout (location = 2) in vec4 Color;
+			uniform mat4 ProjMtx;
+			out vec2 Frag_UV;
+			out vec4 Frag_Color;
+			void main()
+			{
+			    Frag_UV = UV;
+			    Frag_Color = Color;
+			    gl_Position = ProjMtx * vec4(Position.xy, 0, 1);
+			}";
 
 		public static string FragmentShader = @"
-#version 330
-
-precision mediump float;
-uniform sampler2D Texture;
-in vec2 Frag_UV;
-in vec4 Frag_Color;
-layout (location = 0) out vec4 Out_Color;
-
-void main()
-{
-    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
-}";
+			#version 330
+			
+			precision mediump float;
+			uniform sampler2D Texture;
+			in vec2 Frag_UV;
+			in vec4 Frag_Color;
+			layout (location = 0) out vec4 Out_Color;
+			
+			void main()
+			{
+			    Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
+			}";
 
 	}
 }

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<DebugSymbols>false</DebugSymbols>
+		<DebugType>None</DebugType>
+		<TargetFramework>net8.0</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>General</RootNamespace>
+        <Platforms>AnyCPU;x64</Platforms>
+        <BaseOutputPath>bin\</BaseOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ImGui.NET" Version="1.90.8.1" />
+    </ItemGroup>
+
+</Project>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SDLImGuiGL
+namespace OpenGL
 {
 	public unsafe static partial class GL
 	{
